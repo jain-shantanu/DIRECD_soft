@@ -1,5 +1,7 @@
 import streamlit as st
-
+import os
+current_dir = os.getcwd()
+logo_folder = os.path.join(current_dir, 'logo', 'DIRECD_logo.jpg')
 
 def main_text():
     st.subheader('About this application:')
@@ -17,7 +19,7 @@ def main_text():
     #                f"""
     #                **Version**: {version} (latest release [![Version](https://img.shields.io/github/v/release/AthKouloumvakos/PyThea)](https://github.com/AthKouloumvakos/PyThea/releases))
     #                """)
-    left.image('F:\Dimmings_and_CME\GUI\logo\DIRECD_logo.jpg')
+    left.image(logo_folder)
     st.markdown("""
                 **Citation**: Please cite the following paper (https://doi.org/10.1051/0004-6361/202347927)
                 """)
@@ -26,7 +28,7 @@ def main_text():
 
 st.set_page_config(
     page_title="DIRECD - Main Page",
-    page_icon='F:/Dimmings_and_CME/GUI/logo/DIRECD_logo.jpg'  # Direct path to image
+    page_icon=logo_folder  # Direct path to image
 )
 
 st.header("DIRECD: Dimming Inferred Estimation of CME Direction")
