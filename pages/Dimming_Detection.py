@@ -220,7 +220,7 @@ with time_col:
 time_range = form.select_slider(
     "Select the time range of detection (minutes)",
     options=[
-        2,
+        3,
         10,
         30,
         60,
@@ -306,9 +306,9 @@ if not submit:
 
 # Create datetime objects
 event_dt = mp.create_event_datetime(date_event, time_event)
-timestamp_end = event_dt + timedelta(minutes=time_range)
+timestamp_end = event_dt + timedelta(minutes=(time_range-1))
 timestamp_start = event_dt - timedelta(minutes=30)
-timestamp_sample_start = timestamp_start + timedelta(seconds=cadence)
+timestamp_sample_start = timestamp_start + timedelta(seconds=(cadence-1))
 
 safe_event = event_dt.strftime("%Y-%m-%dT%H:%M:%S").replace(":", "-")
 current_dir = os.getcwd()
@@ -385,62 +385,61 @@ if submit:
         if len(os.listdir(save_path_fits))==0 or download_fits:
             spinner_placeholder = st.empty()
             with spinner_placeholder:
-                with st.spinner("Downloading Data...",show_time=True):
-                    # Download base map
-                    base_data, _ = mp.download_data(
-                        wavelength, cadence, 
-                        timestamp_start, timestamp_sample_start,save_path_fits,
-                        data_type="base"
-                    )
-                    
-                    if base_data.errors:
-                        spinner_placeholder.empty()
+                with st.spinner("Downloading Base Data...", show_time=True):
+                    try:
+                        # Download base map
+                        base_data, _ = mp.download_data(
+                            wavelength, cadence, 
+                            timestamp_start, timestamp_sample_start, save_path_fits,
+                            data_type="base"
+                        )
+                        
+                        
+                        
+                    except Exception as e:
+                        st.error(f"An error occurred during download: {str(e)}")
                         col1, col2 = st.columns(2)
                         with col1:
                             st.link_button("JSOC", 'http://jsoc.stanford.edu/AIA/AIA_lev1.html')
                         with col2:
                             st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
-                        st.write('''
-                            Base Map could not be downloaded.
-                            Cannot download Base Map from VSO, please download files manually.
-                            ''')
-                       
-
-                        
+                        st.error('Base Map could not be downloaded. Cannot download Base Map from VSO, please download files manually.')
                         st.stop()
-                    else:
-                        st.success(f"Base Map Downloaded: {timestamp_start}")
                     
-                    # Download main data
-                    main_data, total_files = mp.download_data(
-                        wavelength, cadence,
-                        event_dt, timestamp_end,save_path_fits,
-                        data_type="main"
-                    )
-                    
-                    if main_data.errors:
-                        spinner_placeholder.empty()
+            if not base_data.errors:
+                            st.success(f"Base Map Downloaded: {timestamp_start}")
+           
+                            
+            
+            with spinner_placeholder:
+                with st.spinner("Downloading Main Data...", show_time=True):
+                    try:            
+                        # Download main data
+                        main_data, total_files = mp.download_data(
+                            wavelength, cadence,
+                            event_dt, timestamp_end, save_path_fits,
+                            data_type="main"
+                        )
+                        
+
+                            
+                    except Exception as e:
+                        st.error(f"An error occurred during download: {str(e)}")
                         col1, col2 = st.columns(2)
                         with col1:
                             st.link_button("JSOC", 'http://jsoc.stanford.edu/AIA/AIA_lev1.html')
                         with col2:
                             st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
-                        st.write('''
-                            Data could not be downloaded.
-                            Cannot download Data from VSO, please download files manually.
-                            ''')
-                       
-
-                        
+                        st.error('Data could not be downloaded. Cannot download Data from VSO, please download files manually.')
                         st.stop()
-                    else:
-                        st.success(f"Downloaded {total_files} files to: {save_path_fits}")
-                        st.session_state.data_downloaded = True
+            if not main_data.errors:
+                st.success(f"Downloaded {total_files} files to: {save_path_fits}")
+                st.session_state.data_downloaded = True    
         else:
             st.warning('Data Already downloaded, Skipping this step')
             st.session_state.data_downloaded = True
             should_download = False
-        
+                
     if should_calibrate:
         st.header('Calibrate Data')
         st.markdown('Here we calibrate Base Map and other fits files using sunpy functions. If you already have calibrated'
@@ -537,7 +536,7 @@ if submit:
                                 text=f"{progress_text} {z+1}/{total_files} files")
                 
             
-           ## Your existing processing
+        ## Your existing processing
                 map_file = os.path.join(save_path_fits, listdir[z+1])
                 if not len(os.listdir(diff_rot_folder))==total_files or overwrite_files_calibration:
                 #if any([changes['wavelength'], changes['cadence'], changes['time_range']]):
@@ -565,7 +564,7 @@ if submit:
         st.success(f"Calibration complete! Saved files to: {diff_rot_folder}")
         should_calibrate = False
     
-   
+
         
     if should_LBR:
         st.header('Make Logarithmic Base Ratio (LBR images)')
@@ -605,7 +604,7 @@ if submit:
                     
                     
                 
-               # Calculate log difference
+            # Calculate log difference
                     with np.errstate(divide='ignore', invalid='ignore'):  # Handle log(0)
                         lbr = np.log10(data_map_cropped.data) - np.log10(base_map_cropped.data)
                     #lbr = np.nan_to_num(lbr, nan=0.0, posinf=0.0, neginf=0.0)  # Clean invalid values
@@ -636,11 +635,11 @@ if submit:
         st.session_state.data_processed = True
         should_LBR = False
 
-      ##  LBR code...
+    ##  LBR code...
         
     if should_detect:
         st.header('Running Dimming Detection')
-        if changes['lbr_thresh']:
+        if changes['lbr_thresh'] or st.session_state.save_plots_checkbox:
         #st.session_state.prev_lbr_thresh = lbr_thresh
             data_old = st.session_state.processed_data
             base_map_cropped = data_old['base_map_cropped']
@@ -679,7 +678,7 @@ if submit:
             progress_text = "Dimming Detection In progress..."
             progress_bar = st.progress(0, text=progress_text)
             total_files = len(listdir)
-           
+        
         
         
             #for i in range(len(listdir)):

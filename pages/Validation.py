@@ -154,7 +154,7 @@ submit = form.form_submit_button("Submit")
 
 cone_height = st.sidebar.slider("Cone Height", 1, 10,2,key="myslider")
 
-
+event_dt = mp.create_event_datetime(date_event, time_event)
 
 if submit:
     
@@ -223,8 +223,10 @@ if st.session_state.submitted:
             cone_plotting = True
     
     if st.session_state.file_calibration == 'No calibrated data':
-        idl_script_path = os.path.join(current_dir, 'IDL', 'temp_script.pro')
-        st.write(f'Calibration Routines are provided in {idl_script_path}. Please run it in solarsoft to get calibrated files')
+        event_path = os.path.join(current_dir, 'Events', safe_event, 'lasco.pro')
+        idl_script_path = os.path.join(current_dir, 'IDL', 'lasco.pro')
+        os.replace(idl_script_path, event_path)
+        st.write(f'Calibration Routines are provided in {event_path}. Please run it in solarsoft to get calibrated files')
         st.session_state.uploaded_file = None
         st.session_state.cor2_map = None
         st.session_state.plotting_done = False
