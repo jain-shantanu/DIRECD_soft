@@ -20,11 +20,11 @@ def main_text():
     #                **Version**: {version} (latest release [![Version](https://img.shields.io/github/v/release/AthKouloumvakos/PyThea)](https://github.com/AthKouloumvakos/PyThea/releases))
     #                """)
     left.image(logo_folder)
-    st.markdown("""
-                **Citation**: Please cite the following paper (https://doi.org/10.1051/0004-6361/202347927)
-                """)
+    # st.markdown("""
+    #             **Citation**: Please cite the following paper (https://doi.org/10.1051/0004-6361/202347927)
+    #             """)
     
-    st.markdown('---')
+    # st.markdown('---')
 
 st.set_page_config(
     page_title="DIRECD - Main Page",
