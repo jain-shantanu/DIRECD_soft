@@ -1,15 +1,24 @@
-DIRECD
+Brief introduction to DIRECD
 ====================
 
-DIRECD  is an open-source software package that can be used to
-reconstruct estimate Coronal Mass Ejections (CMEs) direction from coronal dimming information.
-The tool implements the dimming detection using region growing algorithm on SDO/AIA images.
+DIRECD (Dimming Inferred Estimation of CME Direction) is a novel method
+to characterize the early CME propagation direction from the expansion of coronal dimmings. 
 
-Requirements
+For more details refer to our article: 
+
+Graphical User Interface
 ------------
 
-Python 3.10 or above is required to install and run DIRECD.
+The DIRECD-soft GUI is developed to provide the necessary tools to perform early CME direction analysis using 
+coronal dimmings. This package has been built in Python (3.12) with an extensive use of libraries available within
+the Python language ecosystem. The GUI of this application has been built based on Streamlit, an open-source Python 
+library that provides an easy way to create web applications and tested on windows-based operating system.
 
-If you do not have Python installed already, use these `instructions <https://www.python.org/downloads>`_ to download and install it.
-
-                
+Home page
+-------------
+Dimming detection page
+--------------
+DIRECD (CME Direction Estimation) analysis page
+--------------
+Validation page
+---------------
