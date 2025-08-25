@@ -63,6 +63,6 @@ Others
 **Q: Where can I get help if I encounter a bug or have a question?**
 
     Please report any bugs or issues you find by opening an issue on our GitHub repository or 
-    contacting our team at s.jain@skol.tech. 
+    contacting our team at direcd.soft@gmail.com 
     Be sure to include a description of the problem and any error messages you received.
 
