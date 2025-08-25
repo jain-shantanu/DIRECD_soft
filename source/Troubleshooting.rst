@@ -10,6 +10,7 @@ and other unstability issues. While the work is still ongoing to make the softwa
 take the below steps to speed up the software working.
 
 **Downloading Data**
-    Users are encouraged to download SDO data from 'JSOC'_. or MEDOC manually to the ../Events/*Event*/fits folder
+    Users are encouraged to download SDO data from `JSOC`_ or `MEDOC` manually to the ../Events/*Event*/fits folder
 
     .. _JSOC: http://jsoc.stanford.edu/ajax/exportdata.html?ds=aia.lev1_euv_12s
+    -- _MEDOC: https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal
