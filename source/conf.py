@@ -6,6 +6,8 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+
+
 project = 'DIRECD'
 copyright = '2025, Shantanu Jain'
 author = 'Shantanu Jain'
