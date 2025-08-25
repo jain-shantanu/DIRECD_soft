@@ -7,7 +7,6 @@ build:
 
 sphinx:
   configuration: source/conf.py
-  output_dir: $READTHEDOCS_OUTPUT/html
 
 formats:
   - pdf
