@@ -6,14 +6,17 @@
 DIRECD documentation
 ====================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+DIRECD  is an open-source software package that can be used to
+reconstruct estimate Coronal Mass Ejections (CMEs) direction from coronal dimming information.
+The tool implements the dimming detection using region growing algorithm on SDO/AIA images.
+                
 
 .. toctree::
    :maxdepth: 2
 
-   usage/installation
-   usage/quickstart
+   Installing
    ...
+
+.. note::
+
+   This project is under active development.
