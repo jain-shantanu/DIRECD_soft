@@ -26,7 +26,6 @@ exclude_patterns = []
 
 html_theme = 'basic'
 html_static_path = ['_static']
-html_title = 'Documentation for DIRECD'
 
 html_logo = '../logo/DIRECD_logo_rs.jpg'
 html_theme_options = {
