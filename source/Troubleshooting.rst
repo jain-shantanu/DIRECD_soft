@@ -1,16 +1,20 @@
 Troubleshooting
 ====================
 
-Slow Internet Problems
+Optimizing DIRECD Performance
 ---------------------
 
-Although a lot of effort was put to make DIRECD as efficient as possible, sometimes it may take
-too long to run due to slow or unstable internet connection. This may sometimes lead to freezing of GUI
-and other unstability issues. While the work is still ongoing to make the software more robust, users can 
-take the below steps to speed up the software working.
+DIRECD has been designed for maximum efficiency. However, performance can be affected by a slow or unstable internet connection, which may occasionally cause the interface to freeze or become unresponsive.
 
-**Downloading Data**
-    Users are encouraged to download SDO data from `JSOC`_ or `MEDOC`_ manually to the ../Events/*Event*/fits folder
+While we continue to develop a more robust solution, you can significantly improve the software's speed by following these steps:
 
+**Download Data Manually**
+    To avoid delays caused by downloading data during runtime, we recommend pre-downloading the required SDO data manually. 
+    -- `JSOC`_
     .. _JSOC: http://jsoc.stanford.edu/ajax/exportdata.html?ds=aia.lev1_euv_12s
+
+    -- `MEDOC`_ 
     .. _MEDOC: https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal
+   
+**Disable Automatic Plot Saving**
+    The automatic saving of plots can slow down processing. For a considerable performance increase, you can disable this feature. You will still be able to manually save any plot using the standard right-click 'Save As' option.
