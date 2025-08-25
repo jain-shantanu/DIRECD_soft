@@ -221,15 +221,10 @@ time_range = form.select_slider(
     "Select the time range of detection (minutes)",
     options=[
         3,
-        10,
-        30,
-        60,
-        90,
         120,
         150,
         180,
-     
-    ], key="time_range"
+     ], key="time_range"
 )
 
 
@@ -327,7 +322,6 @@ should_LBR = False
 
 
 if submit:
-
     changes = detect_parameter_changes(date_event, time_event,wavelength, cadence, lbr_thresh, time_range, lon_val, lon_dir, lat_val, lat_dir, save_plots_checkbox)
     if save_plots_checkbox_all:
         save_path_plots = os.path.join(current_dir, 'Events', safe_event, 'plots',str(wavelength),str(cadence))
@@ -372,6 +366,7 @@ if submit:
 
 # Only process if submit was clicked
 if submit:
+
     if should_download:
         st.header('Download Data')
         st.markdown('Here we download the required data for our dimming detection algorithm. '
@@ -381,30 +376,49 @@ if submit:
         
         save_path_fits = os.path.join(current_dir, 'Events', safe_event, 'fits',str(wavelength),str(cadence))
         os.makedirs(save_path_fits, exist_ok=True) 
+
+        try:
+            list_dir_map = sorted(os.listdir(save_path_fits))
+            for i in range(len(list_dir_map)):
+                file_event=os.path.join(save_path_fits,list_dir_map[i])
+                map =  sunpy.map.Map(file_event)
+                time_diff = (datetime.strptime(map.meta['date-obs'],'%Y-%m-%dT%H:%M:%S.%f') - timestamp_start)
+                if (time_diff).seconds<0:
+                    os.remove(file_event)
+        except:
+            pass
+            
+
+
+        range_det = timedelta(minutes=time_range)
+        cad_det = timedelta(seconds=cadence)
+
+        tot_files = int(range_det/cad_det)
+        listdir = sorted(os.listdir(save_path_fits))
+
+        tot_files_2 = len(listdir) - 1  # Exclude basemap image
     
-        if len(os.listdir(save_path_fits))==0 or download_fits:
+        if tot_files > tot_files_2 or download_fits:
             spinner_placeholder = st.empty()
             with spinner_placeholder:
                 with st.spinner("Downloading Base Data...", show_time=True):
-                    try:
-                        # Download base map
-                        base_data, _ = mp.download_data(
-                            wavelength, cadence, 
-                            timestamp_start, timestamp_sample_start, save_path_fits,
-                            data_type="base"
-                        )
+                                        # Download base map
+                    base_data, _ = mp.download_data(
+                        wavelength, cadence, 
+                        timestamp_start, timestamp_sample_start, save_path_fits,
+                        data_type="base"
+                    )
                         
                         
                         
-                    except Exception as e:
-                        st.error(f"An error occurred during download: {str(e)}")
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.link_button("JSOC", 'http://jsoc.stanford.edu/AIA/AIA_lev1.html')
-                        with col2:
-                            st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
-                        st.error('Base Map could not be downloaded. Cannot download Base Map from VSO, please download files manually.')
-                        st.stop()
+            if base_data.errors:
+                st.error(base_data.errors)
+                st.error('Base Map could not be downloaded. Cannot download Base Map from VSO, please download files manually.')
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.link_button("JSOC", 'http://jsoc.stanford.edu/ajax/exportdata.html?ds=aia.lev1_euv_12s')
+                with col2:
+                    st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
                     
             if not base_data.errors:
                             st.success(f"Base Map Downloaded: {timestamp_start}")
@@ -412,26 +426,25 @@ if submit:
                             
             
             with spinner_placeholder:
-                with st.spinner("Downloading Main Data...", show_time=True):
-                    try:            
-                        # Download main data
-                        main_data, total_files = mp.download_data(
-                            wavelength, cadence,
-                            event_dt, timestamp_end, save_path_fits,
-                            data_type="main"
-                        )
+                with st.spinner("Downloading Main Data...", show_time=True):         
+                    # Download main data
+                    main_data, total_files = mp.download_data(
+                        wavelength, cadence,
+                        event_dt, timestamp_end, save_path_fits,
+                        data_type="main"
+                    )
                         
 
                             
-                    except Exception as e:
-                        st.error(f"An error occurred during download: {str(e)}")
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.link_button("JSOC", 'http://jsoc.stanford.edu/AIA/AIA_lev1.html')
-                        with col2:
-                            st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
-                        st.error('Data could not be downloaded. Cannot download Data from VSO, please download files manually.')
-                        st.stop()
+            if main_data.errors:
+                st.error(main_data.errors)
+                st.error('Some data could not be downloaded. Please download files manually.')
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.link_button("JSOC", 'http://jsoc.stanford.edu/AIA/AIA_lev1.html')
+                with col2:
+                    st.link_button("MEDOC", 'https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal')
+                st.stop()
             if not main_data.errors:
                 st.success(f"Downloaded {total_files} files to: {save_path_fits}")
                 st.session_state.data_downloaded = True    
@@ -439,6 +452,12 @@ if submit:
             st.warning('Data Already downloaded, Skipping this step')
             st.session_state.data_downloaded = True
             should_download = False
+        
+        
+
+        if tot_files > tot_files_2:
+            st.warning(f'Found {tot_files_2} out of {tot_files}. Some files are not downloaded/missing. Proceed with caution')
+
                 
     if should_calibrate:
         st.header('Calibrate Data')
@@ -1062,7 +1081,7 @@ if submit:
 
 
             except Exception as e:
-                st.warning(f"Error processing")
+                st.warning(str(e))
             should_detect = False
 
 

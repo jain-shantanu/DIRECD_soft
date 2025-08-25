@@ -278,8 +278,10 @@ if processing_map:
         save_path_timing = os.path.join(current_dir, 'Events', safe_event, 'Timing_Map',str(wavelength),str(cadence))
 
         list_dir_map = sorted(os.listdir(save_path_timing))
+        files = [os.path.join(save_path_timing, f) for f in list_dir_map] # add path to each file
+        list_dir_map = sorted(files,key=os.path.getmtime)
         st.write(save_path_timing)
-        file_event=os.path.join(save_path_timing,list_dir_map[0])
+        file_event=os.path.join(save_path_timing,list_dir_map[-1])
         final_timing_map =  sunpy.map.Map(file_event)
         smap = final_timing_map
 
