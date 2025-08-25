@@ -383,7 +383,7 @@ if processing_map:
             ax.set_title((begin_time + timedelta(minutes=np.nanmax(smap_end.data))).strftime('%d-%b-%y %H:%M'), fontsize=14)
             ## Mark the centre coordinate
             buf = BytesIO()
-            plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1,dpi=300)
+            plt.savefig(buf, format='png', dpi=300, bbox_inches='tight', pad_inches=0.1)
              # Important: close the figure to free memory
             buf.seek(0)
             st.image(buf)
@@ -477,7 +477,7 @@ if processing_map:
         fig_2.tight_layout()
 
         buf = BytesIO()
-        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1, dpi=300)
+        plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1, dpi=300)
           # Important: close the figure to free memory
         
         st.image(buf)
@@ -1025,7 +1025,7 @@ if generate_cones or st.session_state.submit_edge:
         ax.indicate_inset_zoom(axin)
 
         buf = BytesIO()
-        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1)
+        plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1,dpi=300)
         plt.close(fig_edge)  # Important: close the figure to free memory
         st.image(buf)
         
@@ -2079,7 +2079,7 @@ if generate_cones or st.session_state.submit_edge:
             }
 
             df = pd.DataFrame(row_2) 
-            info_path = os.path.join(current_dir, 'Events', safe_event, 'cone_results.txt')
+            info_path = os.path.join(current_dir, 'Events', safe_event, 'cone_ensemble_data.txt')
             with open(info_path, 'w') as f:
                 f.write(df.to_string(justify='left', index=False))
                 
