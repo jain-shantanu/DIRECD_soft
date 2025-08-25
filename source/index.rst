@@ -25,6 +25,7 @@ If you do not have Python installed already, use these `instructions <https://ww
    :maxdepth: 2
 
    Installing
+   citing
 
 .. note::
 
