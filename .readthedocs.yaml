@@ -13,6 +13,6 @@ formats:
   - epub
   - htmlzip
 
-python:
-  install:
-    - requirements: requirements.txt
+# python:
+#   install:
+#     - requirements: requirements.txt
