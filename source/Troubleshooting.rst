@@ -9,11 +9,8 @@ DIRECD has been designed for maximum efficiency. However, performance can be aff
 While we continue to develop a more robust solution, you can significantly improve the software's speed by following these steps:
 
 **Download Data Manually**
-    To avoid delays caused by downloading data during runtime, we recommend pre-downloading the required SDO data manually. 
-    -- `JSOC`_
+    To avoid delays caused by downloading data during runtime, we recommend pre-downloading the required SDO data manually from `JSOC`_ or `MEDOC`_. 
     .. _JSOC: http://jsoc.stanford.edu/ajax/exportdata.html?ds=aia.lev1_euv_12s
-
-    -- `MEDOC`_ 
     .. _MEDOC: https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal
    
 **Disable Automatic Plot Saving**
