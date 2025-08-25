@@ -29,6 +29,7 @@ html_static_path = ['_static']
 
 html_logo = '../logo/DIRECD_logo_rs.jpg'
 html_theme_options = {
+    "description": "A light, configurable Sphinx theme",
     'logo_only': False,
     'display_version': True,
 }
