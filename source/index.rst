@@ -12,10 +12,10 @@ The tool implements the dimming detection using region growing algorithm on SDO/
                 
 
 .. toctree::
-   :maxdepth: 2
+   :caption: Getting Started
+   :maxdepth: 1
 
    Installing
-   ...
 
 .. note::
 
