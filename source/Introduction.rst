@@ -16,9 +16,12 @@ library that provides an easy way to create web applications and tested on windo
 
 Home page
 -------------
+
+
+
 Dimming detection page
 --------------
-DIRECD (CME Direction Estimation) analysis page
+DIRECD analysis page
 --------------
 Validation page
 ---------------
