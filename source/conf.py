@@ -26,3 +26,9 @@ exclude_patterns = []
 
 html_theme = 'pyramid'
 html_static_path = ['_static']
+
+html_logo = '../logo/DIRECD_logo.jpg'
+html_theme_options = {
+    'logo_only': False,
+    'display_version': True,
+}

@@ -15,7 +15,7 @@ Create Virtual Environment
 
 .. tip::
 
-  We recommend to create a virtual environment before installing ``PyThea``.
+  We recommend to create a virtual environment before installing ``DIRECD``.
 
 If you use `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ or `Anaconda <https://www.anaconda.com/download>`_
 you can run ``DIRECD`` creating a virtual environment first with `Conda <https://docs.conda.io/en/latest/>`_.
