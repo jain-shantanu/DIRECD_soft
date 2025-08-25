@@ -383,7 +383,7 @@ if processing_map:
             ax.set_title((begin_time + timedelta(minutes=np.nanmax(smap_end.data))).strftime('%d-%b-%y %H:%M'), fontsize=14)
             ## Mark the centre coordinate
             buf = BytesIO()
-            plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1)
+            plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1,dpi=300)
              # Important: close the figure to free memory
             buf.seek(0)
             st.image(buf)
@@ -477,14 +477,14 @@ if processing_map:
         fig_2.tight_layout()
 
         buf = BytesIO()
-        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1)
+        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1, dpi=300)
           # Important: close the figure to free memory
         
         st.image(buf)
         plt.close(fig_2)
 
         if save_all_plots_checkbox:
-            fig_2.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_areas'+'.png'),facecolor='w',bbox_inches='tight')
+            fig_2.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_areas'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
             st.success(f'Plot saved in {save_path_plots}')
     
 
@@ -1030,7 +1030,7 @@ if generate_cones or st.session_state.submit_edge:
         st.image(buf)
         
         if save_all_plots_checkbox:
-            fig_edge.savefig(os.path.join(save_path_plots, 'dimming_edges'+'.png'),facecolor='w',bbox_inches='tight')
+            fig_edge.savefig(os.path.join(save_path_plots, 'dimming_edges'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
             st.success(f'Plot saved in {save_path_plots}')
 
 
@@ -1475,10 +1475,14 @@ if generate_cones or st.session_state.submit_edge:
                 fig_proj.legend(by_label.values(), by_label.keys(),ncol=3,markerscale=2, bbox_transform=fig.transFigure,handletextpad=0.1, labelspacing = 0 , borderpad=0.2,prop={'size': 10}, bbox_to_anchor=(0.5, 0.005),loc='center')
                 # #st.image(fig)
                 buf = BytesIO()
-                fig_proj.savefig(buf, format='png', dpi=200)
+                fig_proj.savefig(buf, format='png', dpi=300)
                 plt.close(fig_proj)  # Important: close the figure to free memory
                 buf.seek(0)
                 st.image(buf)
+
+                if save_all_plots_checkbox:
+                    fig_proj.savefig(os.path.join(save_path_plots, 'projection_1'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
+                    st.success(f'Plot saved in {save_path_plots}')
                 
 
                 fig_new = plt.figure(figsize=(10, 20), num=2, clear=True,layout='tight')
@@ -1621,10 +1625,13 @@ if generate_cones or st.session_state.submit_edge:
                 fig_new.legend(by_label.values(), by_label.keys(),ncol=3,markerscale=2, bbox_transform=fig_new.transFigure,handletextpad=0.1, labelspacing = 0 , borderpad=0.2,prop={'size': 10}, bbox_to_anchor=(0.5, 0.005),loc='center')
                 # #st.image(fig)
                 buf = BytesIO()
-                fig_new.savefig(buf, format='png', dpi=200)
+                fig_new.savefig(buf, format='png', dpi=300)
                 plt.close(fig_new)  # Important: close the figure to free memory
                 buf.seek(0)
                 st.image(buf)
+                if save_all_plots_checkbox:
+                    fig_new.savefig(os.path.join(save_path_plots, 'projection_2'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
+                    st.success(f'Plot saved in {save_path_plots}')
                 
                 #st.pyplot(fig, use_container_width=True)
             except:
@@ -1745,6 +1752,10 @@ if generate_cones or st.session_state.submit_edge:
 
             st.pyplot(fig)
 
+            if save_all_plots_checkbox:
+                    fig.savefig(os.path.join(save_path_plots, 'best_height'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
+                    st.success(f'Plot saved in {save_path_plots}')
+
             if ((np.abs(np.nanmax(rat_fd/10**8)/np.nanmin(rat_fd/10**8)))<10 or a_fd==2)==True:
             
 
@@ -1793,6 +1804,12 @@ if generate_cones or st.session_state.submit_edge:
                 
                 fig.tight_layout()
                 plt.subplots_adjust(hspace=.0)
+
+                if save_all_plots_checkbox:
+                    fig.savefig(os.path.join(save_path_plots, 'best_height'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
+                    st.success(f'Plot saved in {save_path_plots}')
+
+
 
         with st.spinner(f"Finding best-fit cone angle in planes:",show_time=True):
             
@@ -2031,6 +2048,10 @@ if generate_cones or st.session_state.submit_edge:
             ax.axis('off')
 
             st.pyplot(fig)
+
+            if save_all_plots_checkbox:
+                    fig.savefig(os.path.join(save_path_plots, '3d_cone'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
+                    st.success(f'Plot saved in {save_path_plots}')
 
             
             st.write('Writing DIRECD results to file')

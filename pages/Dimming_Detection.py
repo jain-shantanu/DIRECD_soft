@@ -767,12 +767,12 @@ if submit:
                 ax3.imshow((segmented_map.data),cmap='copper',vmin=-10000,origin="lower")
                 if save_plots_checkbox:
                     
-                    fig.savefig(os.path.join(save_path_detection, listdir[i][:-5]+'.png'),facecolor='w',bbox_inches='tight')
+                    fig.savefig(os.path.join(save_path_detection, listdir[i][:-5]+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
                 if i==total_files-1:
                     st.write('Final step map')
                     st.pyplot(fig)
                     if save_plots_checkbox_all:
-                        fig.savefig(os.path.join(save_path_detection, listdir[i][:-5]+'.png'),facecolor='w',bbox_inches='tight')
+                        fig.savefig(os.path.join(save_path_detection, listdir[i][:-5]+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
 
             
             if save_plots_checkbox:
@@ -1073,7 +1073,7 @@ if submit:
                 #st.set_page_config(layout="wide")    
                 st.plotly_chart(fig, use_container_width=True)
                 if save_plots_checkbox_all:
-                    fig.savefig(os.path.join(save_path_plots, 'area_derivative'+'.png'),facecolor='w',bbox_inches='tight')
+                    fig.savefig(os.path.join(save_path_plots, 'area_derivative'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
 
                 
                 st.success(f'Plot generated')

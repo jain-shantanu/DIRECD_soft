@@ -1,9 +1,3 @@
-.. DIRECD documentation master file, created by
-   sphinx-quickstart on Mon Aug 25 13:42:01 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-
 DIRECD
 ====================
 
@@ -19,20 +13,3 @@ Python 3.10 or above is required to install and run DIRECD.
 If you do not have Python installed already, use these `instructions <https://www.python.org/downloads>`_ to download and install it.
 
                 
-
-.. toctree::
-   :caption: Getting Started
-   :maxdepth: 2
-
-   Installing
-   citing
-
-.. toctree::
-   :caption: User Guide
-   :maxdepth: 2
-
-   Introduction
-
-.. note::
-
-   This project is under active development.
