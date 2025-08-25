@@ -5,7 +5,6 @@
 
 DIRECD documentation
 
-.. image:: '../logo/DIRECD_logo.jpg'
 ====================
 
 DIRECD  is an open-source software package that can be used to
