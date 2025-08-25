@@ -6,7 +6,7 @@ build:
     python: "3.10"
 
 sphinx:
-  configuration: conf.py
+  configuration: source/conf.py
   output_dir: $READTHEDOCS_OUTPUT/html
 
 formats:
