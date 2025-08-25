@@ -22,7 +22,7 @@ If you do not have Python installed already, use these `instructions <https://ww
 
 .. toctree::
    :caption: Getting Started
-   :maxdepth: 1
+   :maxdepth: 2
 
    Installing
 
