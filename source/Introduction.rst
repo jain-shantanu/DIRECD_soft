@@ -1,4 +1,4 @@
-Brief introduction to DIRECD
+Introduction
 ====================
 
 DIRECD (Dimming Inferred Estimation of CME Direction) is a novel method
