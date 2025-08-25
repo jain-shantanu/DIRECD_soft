@@ -1,72 +1,16 @@
-.. _installing-direcd:
+.. _acknowledging-direcd:
 
-Citing DIRECD
-=================
+Acknowledging or Citing
+=======================
 
-Requirements
-------------
+If you use DIRECD for scientific work or research presented in a publication, please cite it by acknowledging in the main text its use and include the following citation:
 
-Python 3.10 or above is required to install and run DIRECD.
+.. note:: "Shantanu Jain et al. (2022). Coronal dimmings as indicators of the direction of early coronal mass ejection propagation. A&A 683 A15 (2024), DOI: 10.1051/0004-6361/202347927"
 
-If you do not have Python installed already, use these `instructions <https://www.python.org/downloads>`_ to download and install it.
+.. Also include in the methods or acknowledgement section the following:
 
-Create Virtual Environment
---------------------------
+.. .. note:: "This research has made use of PyThea v?.?.?, an open-source and free Python package to reconstruct the 3D structure of CMEs and shock waves (Zenodo: https://doi.org/10.5281/zenodo.5713659).".
 
-.. tip::
+.. changing the v?.?.? to the version you have used.
 
-  We recommend to create a virtual environment before installing ``DIRECD``.
-
-If you use `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ or `Anaconda <https://www.anaconda.com/download>`_
-you can run ``DIRECD`` creating a virtual environment first with `Conda <https://docs.conda.io/en/latest/>`_.
-
-
-**Creating, Activating, and Deactivating a Conda Environment:**
-
-To create a new Conda environment called "PyThea", and then activate it follow these steps:
-
-1. Open a terminal or command prompt.
-
-2. Use the following command to create a new Conda environment named "DIRECD" and install Python:
-
-   .. code-block:: bash
-
-      conda create --name DIRECD python=3.10
-
-   You can replace "3.10" with the desired Python version.
-
-3. Use the following command to activate the "DIRECD" environment:
-
-   .. code-block:: bash
-
-      conda activate DIRECD
-
-   After executing this command, your prompt should change to indicate that the "DIRECD" environment is active.
-
-You can now run ``DIRECD`` and work within this isolated environment when using this software package.
-
-To deactivate the "DIRECD" Conda environment and return to the base environment use,
-
-   .. code-block:: bash
-
-      conda deactivate
-
- The environment will be deactivated, and you will return to the base Conda environment.
-
-Run DIRECD
-----------------
-
-.. code-block:: bash
-
-  # Create the virtual environment
-  conda create --name DIRECD python=3.10
-
-  # Activate the environment
-  conda activate DIRECD
-
-  # Install the required packages using pip
-  pip install DIRECD
-
-.. warning::
-
-  Currently install with ``conda install DIRECD`` is not suppoted.
+.. To acknowledge PyThea in posters or talks include the project logo or icon.
