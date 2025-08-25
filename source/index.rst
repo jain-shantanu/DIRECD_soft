@@ -4,8 +4,7 @@
    contain the root `toctree` directive.
 
 
-<title> DIRECD documentation </title>
-
+DIRECD
 ====================
 
 DIRECD  is an open-source software package that can be used to
