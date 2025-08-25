@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 
-DIRECD documentation
+<title> DIRECD documentation </title>
 
 ====================
 
@@ -12,7 +12,6 @@ DIRECD  is an open-source software package that can be used to
 reconstruct estimate Coronal Mass Ejections (CMEs) direction from coronal dimming information.
 The tool implements the dimming detection using region growing algorithm on SDO/AIA images.
 
-------------
 Requirements
 ------------
 
