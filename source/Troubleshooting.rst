@@ -10,6 +10,7 @@ While we continue to develop a more robust solution, you can significantly impro
 
 **Download Data Manually**
     To avoid delays caused by downloading data during runtime, we recommend pre-downloading the required SDO data manually from `JSOC`_ or `MEDOC`_. 
+    
     .. _JSOC: http://jsoc.stanford.edu/ajax/exportdata.html?ds=aia.lev1_euv_12s
     .. _MEDOC: https://idoc-medoc.ias.u-psud.fr/sitools/client-user/index.html?project=Medoc-Solar-Portal
    
