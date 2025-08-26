@@ -48,11 +48,16 @@ Dimming Detection
     A: On the left panel, there are several options that define the dimming detection parameters:
 
         *Date: Start date of the event to be analyzed
+
         *Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open
         sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
+
         *Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.
+
         *Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
+
         *Flare Source: Flare origin in HEEQ lat/lon coordinates
+        
         *LBR Threshold: Threshold for region-growing dimming detection. Stronger threshold results in stricter 
         dimming detection. (Default = -0.15)
 
