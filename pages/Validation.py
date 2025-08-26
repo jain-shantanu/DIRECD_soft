@@ -12,6 +12,7 @@ import pickle
 import math
 import astropy.units as u
 from datetime import datetime, timedelta
+import shutil
 
 
 
@@ -225,7 +226,8 @@ if st.session_state.submitted:
     if st.session_state.file_calibration == 'No calibrated data':
         event_path = os.path.join(current_dir, 'Events', safe_event, 'lasco.pro')
         idl_script_path = os.path.join(current_dir, 'IDL', 'lasco.pro')
-        os.replace(idl_script_path, event_path)
+        shutil.copy(idl_script_path, event_path)
+        #os.replace(idl_script_path, event_path)
         st.write(f'Calibration Routines are provided in {event_path}. Please run it in solarsoft to get calibrated files')
         st.session_state.uploaded_file = None
         st.session_state.cor2_map = None
