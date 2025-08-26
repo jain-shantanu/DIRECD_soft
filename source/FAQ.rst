@@ -57,6 +57,20 @@ Dimming Detection
 
         *Data Source: Confirm that the data was downloaded from a supported source like JSOC and is in a compatible format (.fits/.fts).
 
+**Q:** The calibration process produces errors or warnings
+    A: The most common causes of errors/warnings in calibration routine could be:
+        *Incorrect FITS file headers
+        *Missing metadata in downloaded files
+        *Corrupted download files
+
+        To troubleshoot these steps, the users can:
+
+        *Enable the "Overwrite Raw fits" option to force redownload
+        *Check that all files have consistent metadata
+        *Verify the files are complete SDO/AIA Level 1 data
+
+        In case of a specific error, please reach out to us.
+
 
 DIRECD Analysis
 ------------
