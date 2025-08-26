@@ -57,7 +57,7 @@ Dimming Detection
         *Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
 
         *Flare Source: Flare origin in HEEQ lat/lon coordinates
-        
+
         *LBR Threshold: Threshold for region-growing dimming detection. Stronger threshold results in stricter 
         dimming detection. (Default = -0.15)
 
@@ -106,6 +106,27 @@ Dimming Detection
 DIRECD Analysis
 ------------
 
+**Q: What is the purpose of the timing map?**
+    A: The timing map shows the progression of dimming regions over time, with the "End of Impulsive Phase" representing the most developed dimming pattern for analysis.
+
+**Q: What do the different cone parameters represent?**
+    A: 
+    *Height: Estimated CME height in solar radii (Rsun)
+    *Width: Angular width of the CME cone in degrees
+    *Inclination angle β: Inclination angle of the CME propagation direction
+
+**Q: I get the error: "Edge not found" or script stops during edge detection. What to do in this case?**
+    A: The "edge not found" error can happen due to many reasons. If Edge 1 is not found, it usually occurs
+    due to insufficient dimming signature or poor detection. Users can try the following troubleshooting methods 
+    to see if it helps:
+
+    * Verify the flare source coordinates are accurate
+    * Check if the timing map shows clear dimming
+    * Try adjusting the "Time to Analyze Map" parameter
+    * Use manual edge detection option
+
+    If Edge 1 is found but Edge 2 is not found, then the script automatically takes flare source as the second cone edge
+    and continues to the next step. Users can manually define edges 1 and 2 using the manual edge detection option.
 Comparing with Coronagraphs
 ------------
 
