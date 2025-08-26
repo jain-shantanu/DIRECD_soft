@@ -44,6 +44,19 @@ Installation
 Dimming Detection
 ------------
 
+**Q: What are the different parameters to start the dimming detection?**
+    A: On the left panel, there are several options that define the dimming detection parameters:
+
+        *Date: Start date of the event to be analyzed
+        *Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open
+        sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
+        *Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.
+        *Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
+        *Flare Source: Flare origin in HEEQ lat/lon coordinates
+        *LBR Threshold: Threshold for region-growing dimming detection. Stronger threshold results in stricter 
+        dimming detection. (Default = -0.15)
+
+
 **Q: The software can't find or load the solar data. What's wrong?**
     A: Please check the following:
 
@@ -57,19 +70,32 @@ Dimming Detection
 
         *Data Source: Confirm that the data was downloaded from a supported source like JSOC and is in a compatible format (.fits/.fts).
 
-**Q:** The calibration process produces errors or warnings
+**Q: The calibration process produces errors or warnings**
     A: The most common causes of errors/warnings in calibration routine could be:
-        *Incorrect FITS file headers
-        *Missing metadata in downloaded files
-        *Corrupted download files
+        1. Incorrect FITS file headers
+
+        2. Missing metadata in downloaded files
+
+        3. Corrupted download files
 
         To troubleshoot these steps, the users can:
 
-        *Enable the "Overwrite Raw fits" option to force redownload
-        *Check that all files have consistent metadata
-        *Verify the files are complete SDO/AIA Level 1 data
+        1. Enable the "Overwrite Raw fits" option to force redownload
+
+        2. Check that all files have consistent metadata
+
+        3. Verify the files are complete SDO/AIA Level 1 data
 
         In case of a specific error, please reach out to us.
+
+**Q: Dimming Detection produces unexpected results or errors**
+    A: Unexpected results and/or errors in dimming detection can occur due to incorrect flare coordinates 
+    or insufficient time range of detection. For proper dimming detection, ensure the flare latitude and longitude are correctly specified with proper direction (North/South, East/West)
+    and the time range covers at least 120+ minutes after the event.
+
+**Q: The application runs slowly, what to do?** 
+    A: The GUI is highly dependent on internet speed. If the application runs slowly, please check your internet connection.
+    Consider increasing cadence for faster processing or decreasing the detection time range.
 
 
 DIRECD Analysis
