@@ -35,10 +35,11 @@ Installation
 
 **Q: I'm getting errors during installation about missing packages. What should I do?**
      This typically means a dependency failed to install automatically. The most reliable solution is to install DIRECD through pip, as it handles dependencies for you. If problems persist, ensure your pip is up-to-date 
-     .. code-block:: bash
-        (pip install --upgrade pip) 
+     
+.. code-block:: bash
+    pip install --upgrade pip
         
-    and that you have a working internet connection.
+and that you have a working internet connection.
 
 
 Dimming Detection
@@ -49,6 +50,12 @@ Dimming Detection
 
         *File Path: Ensure you have placed the data files in the correct 'fits' subfolder for your event.
 
+        Events/
+        └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
+            └── fits/
+                └── wavelength/
+                    └── cadence/
+                    
         *Data Source: Confirm that the data was downloaded from a supported source like JSOC and is in a compatible format (.fits/.fts).
 
 
