@@ -47,25 +47,25 @@ Dimming Detection
 **Q: What are the different parameters to start the dimming detection?**
     A: On the left panel, there are several options that define the dimming detection parameters:
 
-        *Date: Start date of the event to be analyzed
+        * Date: Start date of the event to be analyzed
 
-        *Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open
+        * Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open
         sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
 
-        *Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.
+        * Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.
 
-        *Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
+        * Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
 
-        *Flare Source: Flare origin in HEEQ lat/lon coordinates
+        * Flare Source: Flare origin in HEEQ lat/lon coordinates
 
-        *LBR Threshold: Threshold for region-growing dimming detection. Stronger threshold results in stricter 
+        * LBR Threshold: Threshold for region-growing dimming detection. Stronger threshold results in stricter 
         dimming detection. (Default = -0.15)
 
 
 **Q: The software can't find or load the solar data. What's wrong?**
     A: Please check the following:
 
-        *File Path: Ensure you have placed the data files in the correct 'fits' subfolder for your event.
+        * File Path: Ensure you have placed the data files in the correct 'fits' subfolder for your event.
 
         Events/
             └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
@@ -73,7 +73,7 @@ Dimming Detection
                     └── wavelength/
                         └── cadence/
 
-        *Data Source: Confirm that the data was downloaded from a supported source like JSOC and is in a compatible format (.fits/.fts).
+        * Data Source: Confirm that the data was downloaded from a supported source like JSOC and is in a compatible format (.fits/.fts).
 
 **Q: The calibration process produces errors or warnings**
     A: The most common causes of errors/warnings in calibration routine could be:
@@ -111,9 +111,9 @@ DIRECD Analysis
 
 **Q: What do the different cone parameters represent?**
     A: 
-    *Height: Estimated CME height in solar radii (Rsun)
-    *Width: Angular width of the CME cone in degrees
-    *Inclination angle β: Inclination angle of the CME propagation direction
+    * Height: Estimated CME height in solar radii (Rsun)
+    * Width: Angular width of the CME cone in degrees
+    * Inclination angle β: Inclination angle of the CME propagation direction
 
 **Q: I get the error: "Edge not found" or script stops during edge detection. What to do in this case?**
     A: The "edge not found" error can happen due to many reasons. If Edge 1 is not found, it usually occurs
@@ -126,9 +126,32 @@ DIRECD Analysis
     * Use manual edge detection option
 
     If Edge 1 is found but Edge 2 is not found, then the script automatically takes flare source as the second cone edge
-    and continues to the next step. Users can manually define edges 1 and 2 using the manual edge detection option.
+    and continues to the next step. Users also have an option to manually define edges 1 and 2 using the manual edge detection option.
+
+** Technical Notes**
+
+* The application requires SunPy, Astropy, and other astronomical Python packages
+* Processing times vary from 5-30 minutes depending on parameters and system capabilities
+* Results are saved in the Events directory with timestamps for reproducibility
+
+
 Comparing with Coronagraphs
 ------------
+
+**Q: What LASCO data format is required?**
+    A: The tool requires calibrated LASCO C2 or C3 FITS files with standard SolarSoft header information.
+
+**Q: I don't have calibrated data, where can I get it?**
+    A: At this moment, it's not possible to calibrate LASCO data using astropy/sunpy libraries in python.
+    However, we provide IDL/Solarsoft routines with the package where the users can calibrate the LASCO C2 data for DIRECD analysis.
+    When the user chooses "I don't have calibrated data", the pro file is saved in:
+
+    Events/
+        └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
+                └── lasco.pro
+
+
+
 
 Others
 ------------
