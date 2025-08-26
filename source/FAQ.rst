@@ -158,6 +158,22 @@ Comparing with Coronagraphs
     Other reasons could be bad dimming detection due to presence of other solar features nearby. Such events may not work with automated DIRECD tool and may require
     careful analysis.
 
+**Q: How do I interpret the matching/ non-matching of DIRECD cone with coronagraph?**
+    A: Below is a general interpretation guideline, although each event is case-specific and may require more analysis:
+    
+    * Good agreement: When the projected cone aligns with the actual CME structure in LASCO imagery.
+    * Partial agreement: If only parts of the cone match, consider whether:
+
+        - The CME has undergone rotation or deflection
+        - The cone model needs adjustment
+        - There are multiple CME components, or presence of secondary dimmings.
+
+    * Poor agreement: Significant mismatches may indicate:
+
+        - Incorrect flare source identification
+        - Complex CME structure not captured by the simple cone model
+        - Data quality or dimming detection issues
+
 
 Others
 ------------
