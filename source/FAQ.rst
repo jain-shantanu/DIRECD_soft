@@ -149,8 +149,14 @@ Comparing with Coronagraphs
     Events/
         └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
                 └── lasco.pro
+**Q: What does the cone height slider control?**
+    A: The cone height slider adjusts the height (in solar radii) of the best-fit cone
+    keeping width and inclination angle same, allowing you to see how the CME would appear at different heights in the corona.
 
-
+**Q: Projected cone position doesn't match LASCO CME position**
+    A: This may happen due to improper calibration of LASCO fits files and/or deflection between different heights (since DIRECD calculates CME direction at low heights while coronagraphs show CME at higher heights).
+    Other reasons could be bad dimming detection due to presence of other solar features nearby. Such events may not work with automated DIRECD tool and may require
+    careful analysis.
 
 
 Others
