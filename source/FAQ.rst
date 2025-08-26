@@ -21,16 +21,17 @@ Installation
 **Q: How do I install DIRECD?**
     DIRECD installation requires certain packages and dependencies that may interfere with the packages already installed on user computer.
     We recommend setting up a virtual environment using conda and installing DIRECD.
-    .. code-block:: bash
 
-        # Create the virtual environment
-        conda create --name DIRECD python=3.10
+.. code-block:: bash
 
-        # Activate the environment
-        conda activate DIRECD
+    # Create the virtual environment
+    conda create --name DIRECD python=3.10
 
-        # Install the required packages using pip
-        pip install DIRECD
+    # Activate the environment
+    conda activate DIRECD
+
+    # Install the required packages using pip
+    pip install DIRECD
 
 **Q: I'm getting errors during installation about missing packages. What should I do?**
      This typically means a dependency failed to install automatically. The most reliable solution is to install DIRECD through pip, as it handles dependencies for you. If problems persist, ensure your pip is up-to-date 
