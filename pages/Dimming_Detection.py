@@ -210,12 +210,28 @@ form = st.sidebar.form("Event_selection")
 date_col, time_col = form.columns([5, 4])
 date_str_min = "01/01/2009"
 parsed_date = datetime.strptime(date_str_min, "%d/%m/%Y").date()
+help_txt = '''
+# Start date of the event
+
+'''
 with date_col:
-    date_event = st.date_input("Date",value=default_date,min_value=parsed_date)  
+    date_event = st.date_input("Date",value=default_date,min_value=parsed_date,key='input_date',help=help_txt)  
 
+help_txt = '''
+# Start time of the event  
+(Flare Start time/Start time of the period to be analyzed)
+
+'''
 with time_col:
-    time_event = st.time_input("Time",value=default_time,step=60) 
+    time_event = st.time_input("Time",value=default_time,step=60,key='input_time',help=help_txt) 
 
+
+help_txt = '''
+# Detection Time Range
+Specifies the time window for detection analysis. The default value is 180 minutes.  
+For reliable dimming detection, it is recommended to keep this value at or above 120 minutes.
+
+'''
 
 time_range = form.select_slider(
     "Select the time range of detection (minutes)",
@@ -224,18 +240,22 @@ time_range = form.select_slider(
         120,
         150,
         180,
-     ], key="time_range"
+     ], key="time_range", help=help_txt,
 )
 
 
 wavelength_col, sample_col = form.columns([2, 2])
 
+help_txt = '''
+# SDO/AIA Wavelength
+
+'''
 with wavelength_col:
     wavelength = st.selectbox(
     "Wavelength (A)",
     (193, 211),
     index=1,
-    placeholder="Wavelength",
+    placeholder="Wavelength",help=help_txt
     
 )
 
@@ -249,21 +269,30 @@ with sample_col:
 )
 lat_value, lat_direction = form.columns([2, 2])
 
-with lat_value:
-    lat_val = st.slider("Flare Source Lat", 0, 60, default_flare_lat)
-with lat_direction:
-    lat_dir = st.selectbox(" ",("North", "South"),index = default_index_lat,
-)
+help_txt = '''
+# Latitude of Flare Source Coordinates (in HEEQ)
 
+'''
+
+with lat_value:
+    lat_val = st.slider("Flare Source Lat", 0, 60, default_flare_lat,help=help_txt)
+
+with lat_direction:
+    lat_dir = st.selectbox(" ",("North", "South"),index = default_index_lat)
+
+help_txt = '''
+# Latitude of Flare Source Coordinates (in HEEQ)
+
+'''
     
 lon_value, lon_direction = form.columns([2, 2])
 
 with lon_value:
-    lon_val = st.slider("Flare Source Lon", 0, 60, default_flare_lon)
+    lon_val = st.slider("Flare Source Lon", 0, 60, default_flare_lon,help=help_txt)
 with lon_direction:
     lon_dir = st.selectbox(" ",("West", "East"),index=default_index_lon,
 )
-
+    
 lbr_thresh = form.slider(
     "LBR Threshold",
     min_value=-0.19,

@@ -91,21 +91,34 @@ date_col, time_col = form.columns([5, 4])
 date_str_min = "01/01/2009"
 parsed_date = datetime.strptime(date_str_min, "%d/%m/%Y").date()
 
-with date_col:
-    date_event = st.date_input("Date",value=default_date,min_value=parsed_date,key='input_date')  
+help_txt = '''
+# Start date of the event
 
+'''
+with date_col:
+    date_event = st.date_input("Date",value=default_date,min_value=parsed_date,key='input_date',help=help_txt)  
+
+help_txt = '''
+# Start time of the event  
+(Flare Start time/Start time of the period to be analyzed)
+
+'''
 with time_col:
-    time_event = st.time_input("Time",value=default_time,step=60,key='input_time') 
+    time_event = st.time_input("Time",value=default_time,step=60,key='input_time',help=help_txt) 
 
 
 wavelength_col, sample_col = form.columns([2, 2])
 
+help_txt = '''
+# SDO/AIA Wavelength
+
+'''
 with wavelength_col:
     wavelength = st.selectbox(
     "Wavelength (A)",
     (193, 211),
     index=1,
-    placeholder="Wavelength",
+    placeholder="Wavelength",help=help_txt
     
 )
 
@@ -121,16 +134,26 @@ with sample_col:
 
 lat_value, lat_direction = form.columns([2, 2])
 
-with lat_value:
-    lat_val = st.slider("Flare Source Lat", 0, 60, default_flare_lat)
-with lat_direction:
-    lat_dir = st.selectbox(" ",("North", "South"),index = default_index_lat,)
+help_txt = '''
+# Latitude of Flare Source Coordinates (in HEEQ)
 
+'''
+
+with lat_value:
+    lat_val = st.slider("Flare Source Lat", 0, 60, default_flare_lat,help=help_txt)
+
+with lat_direction:
+    lat_dir = st.selectbox(" ",("North", "South"),index = default_index_lat)
+
+help_txt = '''
+# Latitude of Flare Source Coordinates (in HEEQ)
+
+'''
     
 lon_value, lon_direction = form.columns([2, 2])
 
 with lon_value:
-    lon_val = st.slider("Flare Source Lon", 0, 60, default_flare_lon)
+    lon_val = st.slider("Flare Source Lon", 0, 60, default_flare_lon,help=help_txt)
 with lon_direction:
     lon_dir = st.selectbox(" ",("West", "East"),index=default_index_lon,
 )
@@ -138,19 +161,40 @@ numeric_options = list(np.arange(31, 151,1))
 string_options = 'End of Impulsive Phase'
 numeric_options.insert(0, string_options)
 
+help_txt = '''
+# Minutes Since Event Start  
+(Note: Count begins from a base-map 30 minutes prior to event start, so "31" = 1 minute after start).
+
+'''
+
 time_analyze = form.selectbox(
     "Time to Analyze Map - Minutes after Base map",
     options= (numeric_options),
     index=0,
-    placeholder="Time to Analyze Map",
+    placeholder="Time to Analyze Map",help=help_txt
     
 )
 
-manual_edge_detection_checkbox = form.checkbox('Manual Edge Detection',label_visibility="visible")
+help_txt = '''
+Check this box to manually define the edges of dimming for cone generation.  
+If unsure, leave this box unchecked and the system will find them automatically.
 
-save_all_plots_checkbox = form.checkbox('Save all plots',label_visibility="visible")
+'''
+manual_edge_detection_checkbox = form.checkbox('Manual Edge Detection',label_visibility="visible", help=help_txt)
 
-plot_ensemble_cones = form.checkbox('Plot ensemble of cones',label_visibility="visible")
+help_txt = '''
+Auto-save plots. When disabled, use right-click 'Save As' to save manually
+'''
+
+save_all_plots_checkbox = form.checkbox('Save all plots',label_visibility="visible", help=help_txt)
+
+help_txt = '''
+#To plot ensemble of 20 cones
+
+Check this box to plot cones with different height, width and inclination angles.
+'''
+
+plot_ensemble_cones = form.checkbox('Plot ensemble of cones',label_visibility="visible", help=help_txt)
 
 submit = form.form_submit_button("Submit")
 
@@ -241,7 +285,9 @@ if st.session_state.submitted:
     current_dir = os.getcwd()
     event_dt = mp.create_event_datetime(date_event, time_event)
     safe_event = event_dt.strftime("%Y-%m-%dT%H:%M:%S").replace(":", "-")
-    save_path_plots = os.path.join(current_dir, 'Events', safe_event, 'plots',str(wavelength),str(cadence))
+    if save_all_plots_checkbox:
+        save_path_plots = os.path.join(current_dir, 'Events', safe_event, 'plots',str(wavelength),str(cadence))
+        os.makedirs(save_path_plots, exist_ok=True) 
     if changes['any_changed']:
         st.write(f"Parameters changed: {', '.join(changes['changed_params'])}")
         if any([changes['manual_edge_detection_checkbox']]):
@@ -382,16 +428,14 @@ if processing_map:
             ax.tick_params(axis='y', which='both', right=False, left=True, direction='in')
             ax.set_title((begin_time + timedelta(minutes=np.nanmax(smap_end.data))).strftime('%d-%b-%y %H:%M'), fontsize=14)
             ## Mark the centre coordinate
-            buf = BytesIO()
-            plt.savefig(buf, format='png', dpi=300, bbox_inches='tight', pad_inches=0.1)
-             # Important: close the figure to free memory
-            buf.seek(0)
-            st.image(buf)
+            #buf = BytesIO()
+            st.pyplot(fig)
             plt.close(fig)
+           
 
             if save_all_plots_checkbox:
                 fig.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_dimming'+'.png'),facecolor='w',bbox_inches='tight')
-                st.success(f'Plot saved in {save_path_plots}')
+                st.success(f'Plot saved in {save_path_plots} as end_of_implusive_phase_dimming.png')
         except Exception as e: 
             st.write(e)
             
@@ -403,12 +447,11 @@ if processing_map:
         #shape=[1024,1024]
         
         smap_end_full = direcd.full_disk_mask1(smap_end)
+        old_dimensions = [smap_end_full.meta['naxis1'], smap_end_full.meta['naxis2']]*u.pixel
 
-        # smap_max_full = resize_full_disk(smap_max_full,shape)
-        # smap_end_full = resize_full_disk(smap_end_full,shape)
 
         smap_end_full = smap_end_full.resample(new_dimensions)
-
+       
         smap_new = smap_end_full
 
         smap_mask_data = np.logical_not((np.isnan(smap_end_full.data)))
@@ -476,16 +519,18 @@ if processing_map:
         #ax2.legend('')
         fig_2.tight_layout()
 
-        buf = BytesIO()
-        plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1, dpi=300)
-          # Important: close the figure to free memory
+        #buf = BytesIO()
+        # plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1, dpi=300)
+        #   # Important: close the figure to free memory
         
-        st.image(buf)
+        # st.image(buf)
+        # plt.close(fig_2)
+        st.pyplot(fig_2)
         plt.close(fig_2)
 
         if save_all_plots_checkbox:
             fig_2.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_areas'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-            st.success(f'Plot saved in {save_path_plots}')
+            st.success(f'Plot saved in {save_path_plots} as end_of_implusive_phase_areas.png')
     
 
 
@@ -869,12 +914,11 @@ if edge_selection:
                 
 if generate_cones or st.session_state.submit_edge:
     with st.spinner(f"Plotting Edges:",show_time=True):
-        xlims_world = [-smap_mask.data.shape[0]-10, smap_mask.data.shape[0]+10]*u.arcsec
-        ylims_world = [-smap_mask.data.shape[1]-10, smap_mask.data.shape[1]+10]*u.arcsec
+        xlims_world = [-smap_mask.data.shape[0]-150, smap_mask.data.shape[0]+150]*u.arcsec
+        ylims_world = [-smap_mask.data.shape[1]-150, smap_mask.data.shape[1]+150]*u.arcsec
 
         world_coords = SkyCoord(Tx=xlims_world, Ty=ylims_world, frame=smap_mask.coordinate_frame)
         pixel_coords_x, pixel_coords_y = smap_mask.wcs.world_to_pixel(world_coords)
-        st.write(smap_mask.world_to_pixel(dimming_edge_world), smap_mask.world_to_pixel(dimming_edge_world_2))
         fig_edge, ax = plt.subplots(nrows = 1, ncols = 1, figsize=(9, 8), subplot_kw={'projection':smap_mask})
 
         smap_mask.plot(annotate=False,axes=ax,alpha=0.3,cmap='binary')
@@ -899,18 +943,18 @@ if generate_cones or st.session_state.submit_edge:
         for contour in contours:
             ax.plot(contour[:, 1], contour[:, 0], linewidth=0.8,color ='r',label='Dimming contour')
 
-        ax.text(0.5, 0.72, "1",fontsize=16, transform=ax.transAxes)
-        ax.text(0.35, 0.69, "2",fontsize=16, transform=ax.transAxes)
-        ax.text(0.28, 0.55, "3",fontsize=16, transform=ax.transAxes)
-        ax.text(0.27, 0.45, "4",fontsize=16, transform=ax.transAxes)
-        ax.text(0.31, 0.35, "5",fontsize=16, transform=ax.transAxes)
-        ax.text(0.36, 0.3, "6",fontsize=16, transform=ax.transAxes)
-        ax.text(0.51, 0.26, "7",fontsize=16, transform=ax.transAxes)
-        ax.text(0.65, 0.35, "8",fontsize=16, transform=ax.transAxes)
-        ax.text(0.7, 0.43, "9",fontsize=16, transform=ax.transAxes)
-        ax.text(0.7, 0.51, "10",fontsize=16, transform=ax.transAxes)
-        ax.text(0.69, 0.59, "11",fontsize=16, transform=ax.transAxes)
-        ax.text(0.63, 0.65, "12",fontsize=16, transform=ax.transAxes)
+        ax.text(0.5, 0.92, "1",fontsize=20, transform=ax.transAxes)
+        ax.text(0.2, 0.82, "2",fontsize=20, transform=ax.transAxes)
+        ax.text(0.07, 0.65, "3",fontsize=20, transform=ax.transAxes)
+        ax.text(0.05, 0.45, "4",fontsize=20, transform=ax.transAxes)
+        ax.text(0.08, 0.28, "5",fontsize=20, transform=ax.transAxes)
+        ax.text(0.3, 0.05, "6",fontsize=20, transform=ax.transAxes)
+        ax.text(0.56, 0.03, "7",fontsize=20, transform=ax.transAxes)
+        ax.text(0.85, 0.2, "8",fontsize=20, transform=ax.transAxes)
+        ax.text(0.92, 0.43, "9",fontsize=20, transform=ax.transAxes)
+        ax.text(0.92, 0.54, "10",fontsize=20, transform=ax.transAxes)
+        ax.text(0.88, 0.68, "11",fontsize=20, transform=ax.transAxes)
+        ax.text(0.75, 0.84, "12",fontsize=20, transform=ax.transAxes)
 
 
         plt.tick_params(
@@ -926,6 +970,8 @@ if generate_cones or st.session_state.submit_edge:
 
         plt.xlabel('X (Arcsec)',fontsize=12)
         plt.ylabel('Y (Arcsec)',fontsize=12)
+        ax.set_xlim(pixel_coords_x)
+        ax.set_ylim(pixel_coords_y)
 
         lon = ax.coords[0]
         lat = ax.coords[1]
@@ -943,14 +989,14 @@ if generate_cones or st.session_state.submit_edge:
 
 
         by_label = dict(zip(labels, handles))
-        fig_edge.legend(by_label.values(), by_label.keys(),ncol=3,markerscale=1, bbox_transform=fig_edge.transFigure,handletextpad=0.2, labelspacing = 0.4 , borderpad=0.2,prop={'size': 12}, bbox_to_anchor=(0.4, 0.10),loc='center',frameon=False)
+        fig_edge.legend(by_label.values(), by_label.keys(),ncol=3,markerscale=1, bbox_transform=fig_edge.transFigure,handletextpad=0.2, labelspacing = 0.4 , borderpad=0.2,prop={'size': 16}, bbox_to_anchor=(0.4, 0.10),loc='center',frameon=False)
 
 
 
 
         ## AXIN
 
-        axin = ax.inset_axes([1.03, 0.02, 0.4, 0.8],projection=smap_mask)
+        axin = ax.inset_axes([1.05, 0.01, 0.6, 1.2],projection=smap_mask)
         smap_mask.plot(annotate=False,axes=axin,alpha=0.3,cmap='binary')
 
         smap_mask.draw_limb(axes=axin,color='red')
@@ -1009,8 +1055,6 @@ if generate_cones or st.session_state.submit_edge:
         ax.plot_coord(dimming_edge_world_2, 'o', color = 'green', markersize=7)
         axin.plot_coord(dimming_edge_world_2, 'o', color = 'green', markersize=7)
 
-
-
         lon = axin.coords[0]
         lat = axin.coords[1]
         lon.set_ticks_visible(False)
@@ -1023,21 +1067,23 @@ if generate_cones or st.session_state.submit_edge:
         axin.coords.frame.set_color('silver')
 
         ax.indicate_inset_zoom(axin)
+  
 
         buf = BytesIO()
         plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1,dpi=300)
         plt.close(fig_edge)  # Important: close the figure to free memory
         st.image(buf)
+      
         
         if save_all_plots_checkbox:
             fig_edge.savefig(os.path.join(save_path_plots, 'dimming_edges'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-            st.success(f'Plot saved in {save_path_plots}')
+            st.success(f'Plot saved in {save_path_plots} as dimming_edges.png')
 
 
 
 
 
-# ### Make cones
+### Make cones
 
     with st.spinner(f"Generating Cones:",show_time=True):
 
@@ -1373,8 +1419,8 @@ if generate_cones or st.session_state.submit_edge:
                     
                     #ax.text(O.x,O.y,O.z,'O',fontsize=15)
                     ax.text(0,0,0,'O',fontsize=15)
-                    ax.text(C.x/u.m,C.y/u.m,C.z/u.m,'C',fontsize=20)
-                    ax.text(P_x[iteration],P_y[iteration],P_z[iteration],'P',fontsize=20)
+                    ax.text(C.x/u.m,C.y/u.m,C.z/u.m+1e8,'C',fontsize=13)
+                    ax.text(P_x[iteration],P_y[iteration],P_z[iteration]+0.5e8,'P',fontsize=13)
                     ax.plot3D(OB_points[:,0], OB_points[:,1], OB_points[:,2], '--',color='black',linewidth=1)
                     ax.plot3D(OA_points[:,0], OA_points[:,1], OA_points[:,2], '--',color='black',linewidth=1)
                 #     ax.plot3D(OB_3D_x_2, OB_3D_y_2, OB_3D_z_2, '--',color='black',linewidth=1)
@@ -1476,16 +1522,18 @@ if generate_cones or st.session_state.submit_edge:
                 # #st.image(fig)
                 buf = BytesIO()
                 fig_proj.savefig(buf, format='png', dpi=300)
-                plt.close(fig_proj)  # Important: close the figure to free memory
+                  # Important: close the figure to free memory
                 buf.seek(0)
                 st.image(buf)
+                
+            
 
                 if save_all_plots_checkbox:
                     fig_proj.savefig(os.path.join(save_path_plots, 'projection_1'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-                    st.success(f'Plot saved in {save_path_plots}')
+                    st.success(f'Plot saved in {save_path_plots} as projection_1.png')
                 
 
-                fig_new = plt.figure(figsize=(10, 20), num=2, clear=True,layout='tight')
+                fig_new = plt.figure(figsize=(10, 20), num=1, clear=True,layout='tight')
 
                 range_num = np.arange(0,1,0.1)
 
@@ -1513,83 +1561,83 @@ if generate_cones or st.session_state.submit_edge:
                     ay2[count_plot-1].remove()
 
 
-                    ax = fig_new.add_subplot(5, 5, count_plot, projection='3d',computed_zorder=False)
+                    ax_new = fig_new.add_subplot(5, 5, count_plot, projection='3d',computed_zorder=False)
 
-                    ax.plot_surface(x_sphere, y_sphere, z_sphere, rstride=3, cstride=3,shade=False,alpha=1,rasterized=True,antialiased=True, color = 'gainsboro',edgecolor='blue',linewidth=0)
-                    ax.plot_surface(X3_array[iteration], Y3_array[iteration], Z3_array[iteration], rstride=1, cstride=1,alpha=0.5,color='darkgreen')
+                    ax_new.plot_surface(x_sphere, y_sphere, z_sphere, rstride=3, cstride=3,shade=False,alpha=1,rasterized=True,antialiased=True, color = 'gainsboro',edgecolor='blue',linewidth=0)
+                    ax_new.plot_surface(X3_array[iteration], Y3_array[iteration], Z3_array[iteration], rstride=1, cstride=1,alpha=0.5,color='darkgreen')
                     
                     x2 = np.array([0, C.x/u.m])
                     y2 = np.array([0, C.y/u.m])
                     z2 = np.array([0, C.z/u.m])
                     
                     #ax.plot3D(x2, y2, z2, color='black',linewidth=2)
-                    ax.plot3D(CP_x[iteration], CP_y[iteration], CP_z[iteration], color='black',linewidth=2)
+                    ax_new.plot3D(CP_x[iteration], CP_y[iteration], CP_z[iteration], color='black',linewidth=2)
                     
                     #ax.text(O.x,O.y,O.z,'O',fontsize=15)
-                    ax.text(0,0,0,'O',fontsize=15)
-                    ax.text(C.x/u.m,C.y/u.m,C.z/u.m,'C',fontsize=20)
-                    ax.text(P_x[iteration],P_y[iteration],P_z[iteration],'P',fontsize=20)
-                    ax.plot3D(OB_points[:,0], OB_points[:,1], OB_points[:,2], '--',color='black',linewidth=1)
-                    ax.plot3D(OA_points[:,0], OA_points[:,1], OA_points[:,2], '--',color='black',linewidth=1)
+                    ax_new.text(0,0,0,'O',fontsize=15)
+                    ax_new.text(C.x/u.m,C.y/u.m,C.z/u.m+1e8,'C',fontsize=13)
+                    ax_new.text(P_x[iteration],P_y[iteration],P_z[iteration]+0.5e8,'P',fontsize=13)
+                    ax_new.plot3D(OB_points[:,0], OB_points[:,1], OB_points[:,2], '--',color='black',linewidth=1)
+                    ax_new.plot3D(OA_points[:,0], OA_points[:,1], OA_points[:,2], '--',color='black',linewidth=1)
                 #     ax.plot3D(OB_3D_x_2, OB_3D_y_2, OB_3D_z_2, '--',color='black',linewidth=1)
                 #     ax.plot3D(OA_3D_x_2, OA_3D_y_2, OA_3D_z_2, '--',color='black',linewidth=1)
-                    ax.set_xlabel('x')
-                    ax.set_ylabel('y')
-                    ax.set_zlabel('z')
+                    ax_new.set_xlabel('x')
+                    ax_new.set_ylabel('y')
+                    ax_new.set_zlabel('z')
 
-                    ax.view_init(azim=0,elev=0)
-                    ax.axis('off')
+                    ax_new.view_init(azim=0,elev=0)
+                    ax_new.axis('off')
                     
                     if iteration in [0,1]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [2,3]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [4,5]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [6,7]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [8,9]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [10,11]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [12,13]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     elif iteration in [14,15]:
-                        ax.set_box_aspect([1,1,1], zoom=2)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
                     else:
-                        ax.set_box_aspect([1,1,1], zoom=2)
-                    direcd.set_axes_equal(ax)
+                        ax_new.set_box_aspect([1,1,1], zoom=2)
+                    direcd.set_axes_equal(ax_new)
                     
                     
                     
 
                     
                     ay2[count_plot].remove()
-                    ax_2 = fig_new.add_subplot(5, 5, count_plot+1, projection=smap_mask)
+                    ax_2_new = fig_new.add_subplot(5, 5, count_plot+1, projection=smap_mask)
                     #ax_2.imshow(smap_mask.data,origin="lower",alpha=0.3,cmap='binary')
-                    smap_mask.plot(annotate=False,axes=ax_2,cmap='binary',alpha=0.3)
+                    smap_mask.plot(annotate=False,axes=ax_2_new,cmap='binary',alpha=0.3)
                     #smap_2.plot(vmin=-1,vmax=1,annotate=False,axes=ax_2)
                     #ax_2.imshow(smap_mask.data,alpha=0.3)
                     smap_mask.draw_limb(color='red')
                         #plt.ioff()
-                    ax_2.plot_coord(ccc, 'o', color = 'black',markersize=10) # center of the flare
-                    overlay = ax_2.get_coords_overlay(new_frame)
+                    ax_2_new.plot_coord(ccc, 'o', color = 'black',markersize=10) # center of the flare
+                    overlay = ax_2_new.get_coords_overlay(new_frame)
                     overlay[0].set_ticks(np.arange(start = -15,stop = 345,step = 30) * u.deg)
                     overlay[0].grid(ls='-', color='blue',linewidth=2)
-                    ax_2.plot_coord(c[iteration], 'o', markersize=1.5,alpha=0.7,label='CME projection')
+                    ax_2_new.plot_coord(c[iteration], 'o', markersize=1.5,alpha=0.7,label='CME projection')
                     #ax_2.text(0.7, 0.7, "C",fontsize=30, transform=ax_2.transAxes)
                     
                     for contour in contours:
-                        ax_2.plot(contour[:, 1], contour[:, 0], linewidth=1,color ='r',label='Dimming contour')
+                        ax_2_new.plot(contour[:, 1], contour[:, 0], linewidth=1,color ='r',label='Dimming contour')
 
                     
 
                     for pos, label_sec in zip(positions, labels_sec):
-                        ax_2.text(pos[0], pos[1], label_sec, fontsize=5)
-                    ax_2.set_xlim(pixel_coords_x)
-                    ax_2.set_ylim(pixel_coords_y)
-                    lon = ax_2.coords[0]
-                    lat = ax_2.coords[1]
+                        ax_2_new.text(pos[0], pos[1], label_sec, fontsize=5)
+                    ax_2_new.set_xlim(pixel_coords_x)
+                    ax_2_new.set_ylim(pixel_coords_y)
+                    lon = ax_2_new.coords[0]
+                    lat = ax_2_new.coords[1]
 
                     lon.set_ticks_visible(False)
                     lon.set_ticklabel_visible(False)
@@ -1598,9 +1646,9 @@ if generate_cones or st.session_state.submit_edge:
                     lon.set_axislabel('')
 
                     
-                    ax_2.coords.frame.set_color('white')
+                    ax_2_new.coords.frame.set_color('white')
                     
-                    handles, labels = ax_2.get_legend_handles_labels()
+                    handles, labels = ax_2_new.get_legend_handles_labels()
 
                     
                     if iteration%2!=0:
@@ -1617,7 +1665,7 @@ if generate_cones or st.session_state.submit_edge:
 
                     
                     for x, y, z in zip(X_cart_array_final, Y_cart_array_final, Z_cart_array_final):
-                        ax.plot3D(x, y, z, 'blue', zorder=2)
+                        ax_new.plot3D(x, y, z, 'blue', zorder=2)
 
                 by_label = dict(zip(labels, handles))
                 fig_new.tight_layout(pad=1.08)
@@ -1631,11 +1679,12 @@ if generate_cones or st.session_state.submit_edge:
                 st.image(buf)
                 if save_all_plots_checkbox:
                     fig_new.savefig(os.path.join(save_path_plots, 'projection_2'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-                    st.success(f'Plot saved in {save_path_plots}')
+                    st.success(f'Plot saved in {save_path_plots} as projection_2.png')
                 
                 #st.pyplot(fig, use_container_width=True)
-            except:
-                st.error('Cant plot')
+            except Exception as e:
+                st.warning('Cant plot')
+                st.error(str(e))
 
 
 
@@ -1754,7 +1803,7 @@ if generate_cones or st.session_state.submit_edge:
 
             if save_all_plots_checkbox:
                     fig.savefig(os.path.join(save_path_plots, 'best_height'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-                    st.success(f'Plot saved in {save_path_plots}')
+                    st.success(f'Plot saved in {save_path_plots} as best_height.png')
 
             if ((np.abs(np.nanmax(rat_fd/10**8)/np.nanmin(rat_fd/10**8)))<10 or a_fd==2)==True:
             
@@ -1804,10 +1853,11 @@ if generate_cones or st.session_state.submit_edge:
                 
                 fig.tight_layout()
                 plt.subplots_adjust(hspace=.0)
+                st.pyplot(fig)
 
                 if save_all_plots_checkbox:
                     fig.savefig(os.path.join(save_path_plots, 'best_height'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-                    st.success(f'Plot saved in {save_path_plots}')
+                    st.success(f'Updated plot saved in {save_path_plots} as best_height.png')
 
 
 
@@ -2051,9 +2101,15 @@ if generate_cones or st.session_state.submit_edge:
 
             if save_all_plots_checkbox:
                     fig.savefig(os.path.join(save_path_plots, '3d_cone'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)
-                    st.success(f'Plot saved in {save_path_plots}')
+                    st.success(f'Plot saved in {save_path_plots} as 3d_cone.png' )
 
-            
+            st.info(f"""
+            **DIRECD Results:**  
+            - **Height:** `{str(round(dist_height[a_fd],2))}`  
+            - **Inclination angle:** `{str(round(angle_2[a_fd],2))}`  
+            - **Cone width:** `{str(round(width[a_fd],2))}`
+            """)
+
             st.write('Writing DIRECD results to file')
             row = {
             'Start of Impulsive phase': [begin_impulsive_phase.strftime("%H:%M:%S")],
@@ -2076,6 +2132,9 @@ if generate_cones or st.session_state.submit_edge:
             'Cone height': dist_height,
             'Inclination Angle': angle_2,
             'Width': width,
+            'P_x': P_x,
+            'P_y': P_y,
+            'P_z': P_z
             }
 
             df = pd.DataFrame(row_2) 

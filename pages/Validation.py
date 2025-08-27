@@ -119,22 +119,34 @@ form = st.sidebar.form("Event_selection")
 date_col, time_col = form.columns([5, 4])
 date_str_min = "01/01/2009"
 parsed_date = datetime.strptime(date_str_min, "%d/%m/%Y").date()
-with date_col:
-    date_event = st.date_input("Date",value=default_date,min_value=parsed_date,key='input_date')  
+help_txt = '''
+# Start date of the event
 
+'''
+with date_col:
+    date_event = st.date_input("Date",value=default_date,min_value=parsed_date,key='input_date',help=help_txt)  
+
+help_txt = '''
+# Start time of the event  
+(Flare Start time/Start time of the period to be analyzed)
+
+'''
 with time_col:
-    time_event = st.time_input("Time",value=default_time,step=60,key='input_time') 
+    time_event = st.time_input("Time",value=default_time,step=60,key='input_time',help=help_txt) 
 
 
 wavelength_col, sample_col = form.columns([2, 2])
 
+help_txt = '''
+# SDO/AIA Wavelength
 
+'''
 with wavelength_col:
     wavelength = st.selectbox(
     "Wavelength (A)",
     (193, 211),
     index=1,
-    placeholder="Wavelength",
+    placeholder="Wavelength",help=help_txt
     
 )
 
@@ -149,11 +161,23 @@ with sample_col:
    
 sc = form.selectbox("Choose spacecraft",('LASCO'))
 
-calibrated_data = form.selectbox("Calibration of files",('Already have calibrated data','No calibrated data'))
+help_txt = '''
+# Is calibrated data available?
+If :green[yes] , select 'Already have calibrated data'.  
+If :red[no], select 'No calibrated data'. The LASCO calibration routine path will be displayed on the screen
+
+'''
+
+calibrated_data = form.selectbox("Calibration of files",('Already have calibrated data','No calibrated data'), help=help_txt)
    
 submit = form.form_submit_button("Submit")
 
-cone_height = st.sidebar.slider("Cone Height", 1, 10,2,key="myslider")
+help_txt = '''
+# Select cone height (Rsun)
+The :red[width] and :red[inclination] are the same as the best-fit cone.
+'''
+
+cone_height = st.sidebar.slider("Cone Height", 1.0, 10.0,step=0.5,key="myslider",format="%0.1f",help=help_txt)
 
 event_dt = mp.create_event_datetime(date_event, time_event)
 
@@ -227,7 +251,6 @@ if st.session_state.submitted:
         event_path = os.path.join(current_dir, 'Events', safe_event, 'lasco.pro')
         idl_script_path = os.path.join(current_dir, 'IDL', 'lasco.pro')
         shutil.copy(idl_script_path, event_path)
-        #os.replace(idl_script_path, event_path)
         st.write(f'Calibration Routines are provided in {event_path}. Please run it in solarsoft to get calibrated files')
         st.session_state.uploaded_file = None
         st.session_state.cor2_map = None
@@ -271,7 +294,7 @@ if st.session_state.submitted:
             if not st.session_state.plotting_done:
                 try:
 
-                    points_array = st.session_state.cone_height*500
+                    points_array = round(st.session_state.cone_height*500)
                     
                     CP_3D_x = np.array([C.x.to_value(),P_x[a_fd]])
                     CP_3D_y = np.array([C.y.to_value(),P_y[a_fd]])
