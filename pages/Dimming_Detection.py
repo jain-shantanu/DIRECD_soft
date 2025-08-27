@@ -293,27 +293,53 @@ with lon_direction:
     lon_dir = st.selectbox(" ",("West", "East"),index=default_index_lon,
 )
     
+help_txt = '''
+# Threshold for dimming detection.  
+Sets the sensitivity for detecting dimming events. The default value is -0.15. A more negative value results in a stricter detection criteria.
+
+'''
+    
 lbr_thresh = form.slider(
     "LBR Threshold",
     min_value=-0.19,
     max_value=-0.11,
     value=default_threshold,
     step=0.04,
-    key="lbr_thresh_slider"
+    key="lbr_thresh_slider", help=help_txt,
     
 )
 
 with form.expander("Save Options"):
+    help_txt = '''
+    # Overwrites previously downloaded data (if it exists)
 
-    download_fits = st.checkbox('Overwrite Raw fits (from VSO)',label_visibility="visible")
-    overwrite_files_calibration = st.checkbox('Overwrite Calibrated Data',label_visibility="visible")
-    overwrite_files_lbr = st.checkbox('Overwrite LBR files',label_visibility="visible")
+    '''
+    download_fits = st.checkbox('Overwrite Raw fits (from VSO)',label_visibility="visible",help=help_txt)
+    help_txt = '''
+    # Overwrites calibrated data files (if it exists)
+
+    '''
+    overwrite_files_calibration = st.checkbox('Overwrite Calibrated Data',label_visibility="visible",help=help_txt)
+    help_txt = '''
+    # Overwrites Logarithmic Base Ratio (LBR) files
+
+    '''
+    overwrite_files_lbr = st.checkbox('Overwrite LBR files',label_visibility="visible",help=help_txt)
     
    
 with form.expander("Plot Options"):
 
-    save_plots_checkbox = st.checkbox('Save All Dimming Detection plots',label_visibility="visible")
-    save_plots_checkbox_all = st.checkbox('Save all final plots',label_visibility="visible")
+    help_txt = '''
+    # Plot and save all dimming detection plots at each step and generate detection video
+
+    '''
+
+    save_plots_checkbox = st.checkbox('Save All Dimming Detection plots',label_visibility="visible",help=help_txt)
+
+    help_txt = '''
+    Auto-save plots. When disabled, use right-click 'Save As' to save manually
+    '''
+    save_plots_checkbox_all = st.checkbox('Save all plots',label_visibility="visible",help=help_txt)
     
     
 
@@ -809,28 +835,30 @@ if submit:
             time_pix_map.save(os.path.join(save_path_timing, listdir[i]),overwrite=True)
             st.session_state.thresh_changed = False  # Reset change flag
             st.success("Dimming Detected!")
-            
-        with st.spinner(f"Generating Detection Video (Threshold: {lbr_thresh})...",show_time=True):
-            detection_video_path = os.path.join(current_dir, 'Events', safe_event, 'Detection_video',str(wavelength),str(cadence))
-            os.makedirs(detection_video_path, exist_ok=True)
-            img_clips = []
-            path_list=[]
+        
+        if save_plots_checkbox_all:
 
-            #accessing path of each image
-            for image in os.listdir(save_path_detection):
-                if image.endswith(".png"):
-                    path_list.append(os.path.join(save_path_detection, image))
+            with st.spinner(f"Generating Detection Video (Threshold: {lbr_thresh})...",show_time=True):
+                detection_video_path = os.path.join(current_dir, 'Events', safe_event, 'Detection_video',str(wavelength),str(cadence))
+                os.makedirs(detection_video_path, exist_ok=True)
+                img_clips = []
+                path_list=[]
 
-            #creating slide for each image
-            for img_path in path_list:
-                slide = ImageClip(img_path,duration=0.1)
-                img_clips.append(slide)
+                #accessing path of each image
+                for image in os.listdir(save_path_detection):
+                    if image.endswith(".png"):
+                        path_list.append(os.path.join(save_path_detection, image))
 
-            #concatenating slides
-            video_slides = concatenate_videoclips(img_clips, method='compose')
-            #exporting final video
-            video_slides.write_videofile(os.path.join(detection_video_path, "detection_video.mp4"), fps=16)
-            st.success('Video Generated')
+                #creating slide for each image
+                for img_path in path_list:
+                    slide = ImageClip(img_path,duration=0.1)
+                    img_clips.append(slide)
+
+                #concatenating slides
+                video_slides = concatenate_videoclips(img_clips, method='compose')
+                #exporting final video
+                video_slides.write_videofile(os.path.join(detection_video_path, "detection_video.mp4"), fps=16)
+                st.success('Video Generated')
 
         # mp.close_file(base_raw)
         # mp.close_file(basemap)
@@ -839,11 +867,13 @@ if submit:
         with st.spinner(f"Calculating Dimming area growth and impulsive phase data...", show_time=True):
             path_2 = os.path.join(current_dir, 'Events', safe_event, 'variables',str(wavelength),str(cadence))
             os.makedirs(path_2, exist_ok=True)
+
         
             file_list_mask = sorted(os.path.join(save_path_timing, f) for f in os.listdir(save_path_timing))
+            list_dir_map = sorted(file_list_mask,key=os.path.getmtime)
 
     # Use generator for memory efficiency when creating maps
-            final_image_mask = [sunpy.map.Map(f) for f in file_list_mask]
+            final_image_mask = [sunpy.map.Map(f) for f in list_dir_map]
 
         
 
