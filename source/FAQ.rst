@@ -128,7 +128,7 @@ DIRECD Analysis
     If Edge 1 is found but Edge 2 is not found, then the script automatically takes flare source as the second cone edge
     and continues to the next step. Users also have an option to manually define edges 1 and 2 using the manual edge detection option.
 
-** Technical Notes**
+**Technical Notes**
 
 * The application requires SunPy, Astropy, and other astronomical Python packages
 * Processing times vary from 5-30 minutes depending on parameters and system capabilities
