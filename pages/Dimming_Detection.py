@@ -87,7 +87,7 @@ def init_session_state():
     if 'prev_time_range' not in st.session_state:
         st.session_state.prev_time_range = 2
     if 'prev_lbr_thresh' not in st.session_state:
-        st.session_state.prev_lbr_thresh = -0.15
+        st.session_state.prev_lbr_thresh = -0.11
     if 'prev_lon' not in st.session_state:
         st.session_state.prev_lon = 0
     if 'prev_lon_dir' not in st.session_state:
@@ -204,7 +204,7 @@ if st.session_state.list_events == '26/11/2011T06:09':
     default_flare_lon = 47
     default_index_lat = 0
     default_index_lon = 0
-    default_threshold = -0.15
+    default_threshold = -0.11
 
 
 
@@ -238,10 +238,11 @@ For reliable dimming detection, it is recommended to keep this value at or above
 time_range = form.select_slider(
     "Select the time range of detection (minutes)",
     options=[
-        3,
         120,
         150,
         180,
+        210,
+        240
      ], key="time_range", help=help_txt,
 )
 
@@ -297,7 +298,7 @@ with lon_direction:
     
 help_txt = '''
 # Threshold for dimming detection.  
-Sets the sensitivity for detecting dimming events. The default value is -0.15. A more negative value results in a stricter detection criteria.
+Sets the sensitivity for detecting dimming events. The default value is -0.11. A more negative value results in a stricter detection criteria.
 
 '''
     
@@ -760,6 +761,16 @@ if submit:
         os.makedirs(save_path_detection, exist_ok=True)
         save_path_timing = os.path.join(current_dir, 'Events', safe_event, 'Timing_Map',str(wavelength),str(cadence))
         os.makedirs(save_path_timing, exist_ok=True)
+        listdir = sorted(os.listdir(log_diff_folder))
+        
+        #total_files = len(listdir)
+
+        tot_files_2 = len(listdir)
+        range_det = timedelta(minutes=time_range)
+        cad_det = timedelta(seconds=cadence)
+
+        tot_files = int(range_det/cad_det)
+        total_files = min(tot_files,tot_files_2)
         
     
         #current_thresh = st.session_state.lbr_thresh
