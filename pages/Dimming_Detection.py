@@ -85,7 +85,7 @@ def init_session_state():
     if 'cadence_val' not in st.session_state:
         st.session_state.cadence_val = 60
     if 'prev_time_range' not in st.session_state:
-        st.session_state.prev_time_range = 2
+        st.session_state.prev_time_range = 180
     if 'prev_lbr_thresh' not in st.session_state:
         st.session_state.prev_lbr_thresh = -0.11
     if 'prev_lon' not in st.session_state:
@@ -196,6 +196,7 @@ default_index_lat = 0
 default_flare_lon = 0
 default_index_lon = 0
 default_threshold = -0.19
+default_time_range=180
 
 if st.session_state.list_events == '26/11/2011T06:09':
     default_date = datetime.strptime('26 11 2011', '%d %m %Y')
@@ -205,6 +206,7 @@ if st.session_state.list_events == '26/11/2011T06:09':
     default_index_lat = 0
     default_index_lon = 0
     default_threshold = -0.11
+    default_time_range=180
 
 
 
@@ -243,7 +245,7 @@ time_range = form.select_slider(
         180,
         210,
         240
-     ], key="time_range", help=help_txt,
+     ], key="time_range", help=help_txt, value=default_time_range
 )
 
 
