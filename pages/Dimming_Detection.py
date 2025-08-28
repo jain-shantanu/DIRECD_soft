@@ -18,6 +18,8 @@ from io import StringIO
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import shutil
+from astropy.io import fits
 
 
 import gc
@@ -432,19 +434,6 @@ if submit:
         save_path_fits = os.path.join(current_dir, 'Events', safe_event, 'fits',str(wavelength),str(cadence))
         os.makedirs(save_path_fits, exist_ok=True) 
 
-        try:
-            list_dir_map = sorted(os.listdir(save_path_fits))
-            for i in range(len(list_dir_map)):
-                file_event=os.path.join(save_path_fits,list_dir_map[i])
-                map =  sunpy.map.Map(file_event)
-                time_diff = (datetime.strptime(map.meta['date-obs'],'%Y-%m-%dT%H:%M:%S.%f') - timestamp_start)
-                if (time_diff).seconds<0:
-                    os.remove(file_event)
-        except:
-            pass
-            
-
-
         range_det = timedelta(minutes=time_range)
         cad_det = timedelta(seconds=cadence)
 
@@ -452,6 +441,24 @@ if submit:
         listdir = sorted(os.listdir(save_path_fits))
 
         tot_files_2 = len(listdir) - 1  # Exclude basemap image
+
+        try:
+            st.info('Running Pre-checks, Please wait....')
+            list_dir_map = sorted(os.listdir(save_path_fits))
+            for i in range(len(list_dir_map)):
+                file_event = os.path.join(save_path_fits,list_dir_map[i])
+                headerList=fits.open(file_event)
+                header_data = headerList[1].header['date-obs']
+                time_diff = (datetime.strptime(header_data,'%Y-%m-%dT%H:%M:%S.%f') - timestamp_start)
+                if (time_diff).seconds<0:
+                    os.remove(file_event)
+            st.success('Pre-check completed!')
+        except Exception as e:
+            st.write(str(e))
+            
+
+
+        
     
         if tot_files > tot_files_2 or download_fits:
             spinner_placeholder = st.empty()
@@ -519,17 +526,31 @@ if submit:
         st.markdown('Here we calibrate Base Map and other fits files using sunpy functions. If you already have calibrated'
                     'data, you can put them in necessary folders and it will skip the calibration. However, it is highly recommended'
                     'to recalibrate the data for proper working of dimming detection')
+        save_path_fits = os.path.join(current_dir, 'Events', safe_event, 'fits',str(wavelength),str(cadence))
         diff_rot_folder = os.path.join(current_dir, 'Events', safe_event, 'Calibrated',str(wavelength),str(cadence))
         os.makedirs(diff_rot_folder, exist_ok=True)
         log_diff_folder = os.path.join(current_dir, 'Events', safe_event, 'LBR',str(wavelength),str(cadence))
         os.makedirs(log_diff_folder, exist_ok=True)
+        basemap_folder = os.path.join(current_dir, 'Events', safe_event, 'basemap',str(wavelength),str(cadence))
+        os.makedirs(basemap_folder, exist_ok=True)
+
+        range_det = timedelta(minutes=time_range)
+        cad_det = timedelta(seconds=cadence)
+
+        tot_files = int(range_det/cad_det)
+
+        listdir = sorted(os.listdir(diff_rot_folder))
+
+        tot_files_2 = len(listdir)-1  # Exclude basemap image
+
+
+        
+    
 
 
         st.write('Calibrate Base_map')
         with st.spinner("Calibrating Base Map...",show_time=True):
-            basemap_folder = os.path.join(current_dir, 'Events', safe_event, 'basemap',str(wavelength),str(cadence))
-            os.makedirs(basemap_folder, exist_ok=True)
-            
+        
             listdir = sorted(os.listdir(save_path_fits)) #show elements in the folder
             number= len(listdir)
 
@@ -583,37 +604,38 @@ if submit:
 
             st.success(f"Calibrated and Saved basemap files to: {basemap_folder}")
 
-        progress_text = "Calibrating Data Files..."
-        progress_bar = st.progress(0, text=progress_text)
-        range_det = timedelta(minutes=time_range)
-        cad_det = timedelta(seconds=cadence)
-
-        tot_files = int(range_det/cad_det)
-
-        tot_files_2 = len(listdir) - 1  # Exclude basemap image
-
-        if tot_files > tot_files_2:
-            total_files = tot_files_2
-        else:
-            total_files = tot_files
-
-
-
         
-        for z in range(0,total_files):
+        
+        
+        
+        if tot_files > tot_files_2 or overwrite_files_calibration:
+            shutil.rmtree(diff_rot_folder)
+            os.makedirs(diff_rot_folder, exist_ok=True)
     
-        #for z in range(100, 101):
-            try:
-            # Update progress
-                progress_percent = round(((z+1) / total_files) * 100)
-                progress_bar.progress(progress_percent, 
-                                text=f"{progress_text} {z+1}/{total_files} files")
+   # Exclude basemap image
+
+          
+
+            progress_text = "Calibrating Data Files..."
+            progress_bar = st.progress(0, text=progress_text)
+
+
+
+            total_files = min(tot_files_2,tot_files)
+            for z in range(0,total_files):
+        
+            #for z in range(100, 101):
+                try:
+                # Update progress
+                    progress_percent = round(((z+1) / total_files) * 100)
+                    progress_bar.progress(progress_percent, 
+                                    text=f"{progress_text} {z+1}/{total_files} files")
+                    
                 
-            
-        ## Your existing processing
-                map_file = os.path.join(save_path_fits, listdir[z+1])
-                if not len(os.listdir(diff_rot_folder))==total_files or overwrite_files_calibration:
-                #if any([changes['wavelength'], changes['cadence'], changes['time_range']]):
+            ## Your existing processing
+                    map_file = os.path.join(save_path_fits, listdir[z+1])
+                   # if not len(os.listdir(diff_rot_folder))==total_files or overwrite_files_calibration:
+                    ##if any([changes['wavelength'], changes['cadence'], changes['time_range']]):
                     map_el= sunpy.map.Map(map_file)
                     if map_el.meta['exptime']<1.5:
                         st.warning(f"Warning! {listdir[z+1]} exposure time is too low", icon="⚠️")
@@ -625,18 +647,18 @@ if submit:
                     
                     out_warp.save(os.path.join(diff_rot_folder, listdir[z+1]), overwrite=True)
         
+                        
+                        
                     
+                except Exception as e:
+                    st.warning(f"Error processing {listdir[z+1]}: {str(e)}")
                     
-                
-            except Exception as e:
-                st.warning(f"Error processing {listdir[z+1]}: {str(e)}")
-                
-            continue
+                continue
 
-        ## Completion
-        progress_bar.progress(100, text=f"Completed {total_files}/{total_files} files")
-        st.success(f"Calibration complete! Saved files to: {diff_rot_folder}")
-        should_calibrate = False
+            ## Completion
+            progress_bar.progress(100, text=f"Completed {total_files}/{total_files} files")
+            st.success(f"Calibration complete! Saved files to: {diff_rot_folder}")
+            should_calibrate = False
     
 
         
@@ -645,33 +667,33 @@ if submit:
         st.markdown('Here we create LBR images for our dimming detection using Base Difference images. Note that the saved '
                 'LBR images will be cropped in an area of 1000X1000 arcsecs around the flare source')
     ## Creating Base Diff and LBR
-        listdir = sorted(os.listdir(diff_rot_folder))
-        progress_text = "Processing Log Difference Images..."
-        progress_bar = st.progress(0, text=progress_text)
+        listdir = sorted(os.listdir(log_diff_folder))
+        
         #total_files = len(listdir)
 
         tot_files_2 = len(listdir)
+        total_files = min(tot_files,tot_files_2)
 
-        if tot_files > tot_files_2:
-            total_files = tot_files_2
-        else:
-            total_files = tot_files
-        
-        for i in range(total_files):
-            try:
-                # Update progress (0-100%)
-                progress_percent = int((i + 1) / total_files * 100)
-                progress_bar.progress(
-                    progress_percent,
-                    text=f"{progress_text} {i+1}/{total_files} files"
-                )
-                
-                # Process current file
-                data_path = os.path.join(diff_rot_folder, listdir[i])
-                lbr_path = os.path.join(log_diff_folder, listdir[i])
-                if not len(os.listdir(log_diff_folder))==total_files or overwrite_files_lbr:
+        if tot_files > tot_files_2 or overwrite_files_lbr:
+
+            progress_text = "Processing Log Difference Images..."
+            progress_bar = st.progress(0, text=progress_text)
+            
+            for i in range(total_files):
+                try:
+                    # Update progress (0-100%)
+                    progress_percent = int((i + 1) / total_files * 100)
+                    progress_bar.progress(
+                        progress_percent,
+                        text=f"{progress_text} {i+1}/{total_files} files"
+                    )
                     
-                #if any([changes['wavelength'], changes['cadence'], changes['time_range']]) or any([changes['lat_val'], changes['lon_val'], changes['lat_dir'], changes['lon_dir']]):
+                    # Process current file
+                    data_path = os.path.join(diff_rot_folder, listdir[i])
+                    lbr_path = os.path.join(log_diff_folder, listdir[i])
+                   # if not len(os.listdir(log_diff_folder))==total_files or overwrite_files_lbr:
+                        
+                    #if any([changes['wavelength'], changes['cadence'], changes['time_range']]) or any([changes['lat_val'], changes['lon_val'], changes['lat_dir'], changes['lon_dir']]):
                     data_map = sunpy.map.Map(data_path)
                     data_map_cropped = mp.crop_map(data_map,cenX,cenY,crop_size_x=1000,crop_size_y=1000)
                     
@@ -687,14 +709,14 @@ if submit:
                     logbr.save(os.path.join(log_diff_folder, listdir[i]), overwrite=True)
                 
                 
-            except Exception as e:
-                st.warning(f"Error processing {listdir[i]}: {str(e)}")
-                continue
+                except Exception as e:
+                    st.warning(f"Error processing {listdir[i]}: {str(e)}")
+                    continue
 
-        # Final completion
-        progress_bar.progress(100, text=f"Completed {total_files}/{total_files} files")
-        st.success(f"Log difference processing complete! Saved files to: {log_diff_folder}")
-        
+            # Final completion
+            progress_bar.progress(100, text=f"Completed {total_files}/{total_files} files")
+            st.success(f"Log difference processing complete! Saved files to: {log_diff_folder}")
+            
 
 
         st.session_state.processed_data.update({
@@ -751,7 +773,7 @@ if submit:
         with st.spinner(f"Detecting Dimming...",show_time=True):
             progress_text = "Dimming Detection In progress..."
             progress_bar = st.progress(0, text=progress_text)
-            total_files = len(listdir)
+            
         
         
         
