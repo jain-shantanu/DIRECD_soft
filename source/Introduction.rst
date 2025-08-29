@@ -72,7 +72,7 @@ dimming falls to 15% of its maximum value—and saves this information in a .txt
 for subsequent DIRECD analysis.
 
 .. figure:: images_docs/detection_1.png
-    :scale: 30%
+    :scale: 20%
 
     Fig 2. Working of Dimming Detection page
 
@@ -80,6 +80,35 @@ for subsequent DIRECD analysis.
 
 DIRECD analysis page
 --------------
+
+After you have generated your dimming masks using the Dimming Detection tool, proceed to the DIRECD page to perform a 
+Coronal Mass Ejection (CME) analysis.
+**Page Layout & Initial Setup**
+ - The DIRECD page has a similar layout to the Dimming Detection page but includes additional analysis controls.
+ - The base map for comparison is automatically set to a time 30 minutes before the flare's start.
+
+**Choosing a Time:**
+
+- Recommended (Default): For the most reliable results, use the default selection, which is set to the end of the flare's impulsive 
+phase. This timestamp has been rigorously validated for the DIRECD method. You may also manually select any other timestamp from the 
+list for your analysis.
+
+**Cone Edge Detection:**
+
+- Automated Detection (Default): Selects the optimal cone edges to maximize the coverage of the dimming region.
+- Manual Adjustment: If you wish to override the automated result, select the Manual Edge Detection option in the left-hand panel. This
+ will allow you to interactively select and adjust the cone edges yourself.
+
+**Results & Output Files:**
+
+Once the analysis is complete, the following outputs will be generated:
+
+- A plot showing the best-fit cone overlaid on the dimming mask.
+
+- Txt files: All results are saved as text files in your root directory. These files contain:
+
+    * The derived CME parameters (3D/2D direction, speed, width).
+    * The complete set of cone parameters for all generated cones (height, width, inclination angle).
 
 Comparison
 ---------------
