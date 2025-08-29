@@ -42,8 +42,8 @@ The flare source location is specified in heliographic latitude and longitude an
 DIRECD method. Finally, the user selects the threshold for dimming detection from three predefined options (-0.11, -0.15, -0.19) to execute the detection. 
 Additional options allow for the automatic saving of plots and overwriting previous results. 
 
-.. image:: images_docs/dimming_detection_page.png
-    :scale: 30 %
+.. image:: images_docs/dimming_detection_page.png  
+    :scale: 30%  
     Fig 1. Selection panels of the Dimming Detection page
 
 
