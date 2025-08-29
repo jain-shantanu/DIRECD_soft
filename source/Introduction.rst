@@ -43,7 +43,7 @@ DIRECD method. Finally, the user selects the threshold for dimming detection fro
 Additional options allow for the automatic saving of plots and overwriting previous results. 
 
 .. figure:: images_docs/dimming_detection_page.png
-    :align: center
+    
     :scale: 30 %
     
 
