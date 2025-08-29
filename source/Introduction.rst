@@ -72,12 +72,12 @@ calculates the dimming area derivative (dA/dT), identifies the maximum and the e
 dimming falls to 15% of its maximum value—and saves this information in a .txt file in the root folder and in the ”variables” directory 
 for subsequent DIRECD analysis.
 
-.. figure:: images_docs/detection_1.png
+.. .. figure:: images_docs/detection_1.png
     
-    :scale: 30 %
+..     :scale: 30 %
     
 
-   Fig 2. Working of Dimming Detection page
+..    Fig 2. Working of Dimming Detection page
 
 
 
