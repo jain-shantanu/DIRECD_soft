@@ -31,15 +31,15 @@ html_theme = "sphinx_rtd_theme"
 # html_theme = 'alabaster'
 html_static_path = ['_static']
 
-html_sidebars = {
-    '**': [
-        'about.html',
-        'searchfield.html',
-        'navigation.html',
-        'relations.html',
-        'donate.html',
-    ]
-}
+# html_sidebars = {
+#     '**': [
+#         'about.html',
+#         'searchfield.html',
+#         'navigation.html',
+#         'relations.html',
+#         'donate.html',
+#     ]
+# }
 
 html_logo = '../logo/DIRECD_logo_rs.jpg'
 html_theme_options = {
