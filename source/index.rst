@@ -27,6 +27,12 @@ The tool implements the dimming detection using region growing algorithm on SDO/
    FAQ
    Troubleshooting
 
+.. toctree::
+   :caption: Theory behind DIRECD
+   :maxdepth: 2
+
+   Theory
+
 
             
 
