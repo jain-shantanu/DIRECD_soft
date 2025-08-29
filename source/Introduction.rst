@@ -42,11 +42,30 @@ The flare source location is specified in heliographic latitude and longitude an
 DIRECD method. Finally, the user selects the threshold for dimming detection from three predefined options (-0.11, -0.15, -0.19) to execute the detection. 
 Additional options allow for the automatic saving of plots and overwriting previous results.
 
-.. figure:: images_docs/dimming_detection_page_1.png
-   :scale: 50 %
-   :alt: map to buried treasure
+.. subfigure:: A|B
+   :layout-sm: A|B
+   :gap: 8px
+   :subcaptions: above
+   :name: myfigure
+   :class-grid: outline
 
-   This is the caption of the figure (a simple paragraph).
+   .. image:: images_docs/dimming_detection_page_1.png
+      :scale: 30 %
+      :alt: map to buried treasure
+
+   .. image:: images_docs/dimming_detection_page_1.png
+      :scale: 30 %
+      :alt: map to buried treasure
+
+ 
+
+    Figure Caption
+
+.. .. figure:: images_docs/dimming_detection_page_1.png
+..    :scale: 30 %
+..    :alt: map to buried treasure
+
+..    This is the caption of the figure (a simple paragraph).
 
 
 DIRECD analysis page
