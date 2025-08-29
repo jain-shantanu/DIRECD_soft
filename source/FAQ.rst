@@ -49,7 +49,7 @@ Dimming Detection
 
         * Date: Start date of the event to be analyzed
 
-        * Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open
+        * Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open 
         sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
 
         * Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.

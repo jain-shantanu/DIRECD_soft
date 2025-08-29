@@ -17,6 +17,10 @@ library that provides an easy way to create web applications and tested on windo
 Home page
 -------------
 
+The application's Home page features a brief introduction to the software alongside key publications detailing the DIRECD method. 
+A navigation panel on the left side lists all available pages, allowing users to initiate an analysis by selecting the Dimming Detection
+module.
+
 
 
 Dimming detection page
