@@ -43,11 +43,8 @@ DIRECD method. Finally, the user selects the threshold for dimming detection fro
 Additional options allow for the automatic saving of plots and overwriting previous results. 
 
 .. figure:: images_docs/dimming_detection_page.png
-    :align: center
     :scale: 30 %
-    
-
-   Fig 1. Selection panels of the Dimming Detection page
+    Fig 1. Selection panels of the Dimming Detection page
 
 
 Upon submission of the selected parameters, DIRECD-soft retrieves the corresponding solar data from the Virtual Solar Observatory (VSO)
@@ -76,8 +73,6 @@ for subsequent DIRECD analysis.
 .. figure:: images_docs/detection_1.png
     :align: center
     :scale: 30 %
-    
-
    Fig 2. Working of Dimming Detection page
 
 
