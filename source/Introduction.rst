@@ -43,7 +43,7 @@ DIRECD method. Finally, the user selects the threshold for dimming detection fro
 Additional options allow for the automatic saving of plots and overwriting previous results.
 
 .. figure:: images_docs/dimming_detection_page.png
-   :scale: 50 %
+   :scale: 10 %
    :alt: map to buried treasure
 
    This is the caption of the figure (a simple paragraph).
