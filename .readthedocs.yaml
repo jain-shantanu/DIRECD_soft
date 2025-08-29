@@ -9,7 +9,6 @@ sphinx:
   configuration: source/conf.py
 
 formats:
-  - pdf
   - htmlzip
 
 python:
