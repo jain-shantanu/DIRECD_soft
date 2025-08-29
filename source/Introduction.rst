@@ -83,6 +83,7 @@ DIRECD analysis page
 
 After you have generated your dimming masks using the Dimming Detection tool, proceed to the DIRECD page to perform a 
 Coronal Mass Ejection (CME) analysis.
+
 **Page Layout & Initial Setup**
  - The DIRECD page has a similar layout to the Dimming Detection page but includes additional analysis controls.
  - The base map for comparison is automatically set to a time 30 minutes before the flare's start.
@@ -110,5 +111,35 @@ Once the analysis is complete, the following outputs will be generated:
     * The derived CME parameters (3D/2D direction, speed, width).
     * The complete set of cone parameters for all generated cones (height, width, inclination angle).
 
-Comparison
+Comparison with Coronagraph Data
 ---------------
+
+DIRECD-soft allows you to validate your analysis by comparing the predicted CME cone model against actual coronagraph observations.
+The tool currently supports comparison with SOHO/LASCO coronagraph data.  
+To start the process, users can navigate to the Comparison page and fill the event date/time. 
+
+**If You Have Calibrated LASCO Files:**  
+
+- When prompted, select "Yes" to indicate you have pre-calibrated LASCO FITS files.
+
+- Upload your files using the provided interface.
+
+- The pipeline will automatically overlay your DIRECD-derived cone model onto the coronagraph images.
+
+
+** If You Need Calibrated LASCO Files: **
+
+- If you do not have calibrated files, select "No" when prompted.
+
+- The software provides a calibration routine. Navigate to the /Events/ directory on your system.
+
+- Locate and run the provided IDL/SolarSoft calibration script.
+
+- This script will generate the necessary calibrated FITS files for your event.
+
+- Once generated, return to the Validation page and upload these new files to proceed with the comparison.
+
+
+Use the interactive controls to adjust the cone's projected height on the coronagraph images. This allows you to visualize how the 
+CME structure would appear at different points in the corona.  
+*Note: The cone's width and direction remain fixed during this adjustment.*
