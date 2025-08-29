@@ -40,14 +40,46 @@ The software currently supports EUV images from SDO/AIA. Key parameters include 
 detection time range (which defaults to 180 minutes), the wavelength (193 or 211 Å), and the image cadence (12 to 60 seconds). 
 The flare source location is specified in heliographic latitude and longitude and must be within ±60° to be compatible with the 
 DIRECD method. Finally, the user selects the threshold for dimming detection from three predefined options (-0.11, -0.15, -0.19) to execute the detection. 
-Additional options allow for the automatic saving of plots and overwriting previous results.
+Additional options allow for the automatic saving of plots and overwriting previous results. 
 
 .. figure:: images_docs/dimming_detection_page.png
     :align: center
     :scale: 30 %
-    :alt: map to buried treasure
+    
 
    Fig 1. Selection panels of the Dimming Detection page
+
+
+Upon submission of the selected parameters, DIRECD-soft retrieves the corresponding solar data from the Virtual Solar Observatory (VSO)
+using SunPy’s data acquisition interface, Fido. The downloaded data, stored in the standard Flexible Image Transport System (FITS) 
+format, is automatically saved in the directory:  
+         Events/
+            └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
+                └── fits/  
+The algorithm also downloads the basemap for dimming detection, which by default captures data from 30 minutes prior to the event start
+time. To optimize efficiency and avoid redundant downloads, DIRECD-soft checks the local database before initiating a new data request. 
+For each search, the software verifies whether the required dataset—corresponding to the specified date, time, wavelength, and
+cadence—already exists in local storage and skips the download process if found.
+
+
+Following data retrieval, the pipeline automatically executes calibration procedures. These include differential rotation correction, 
+resampling to 1024X1024 pixel images, cropping maps to a 1000X1000 arcsec area centered on the flare source, and the generation of 
+logarithmic base-ratio images essential for dimming detection. Once calibrated, the dimming detection algorithm processes each image 
+sequentially, constructing a cumulative dimming mask that tracks the evolution of dimming regions. The final mask, referred to as the 
+timing map, is stored in the /Events/YYYY-MM-DDTHH-MM-SS/Timing/ directory. To optimize computational efficiency, DIRECD-soft does not save 
+intermediate detection images by default. However, enabling the ”Save All Dimming Detection Plots” option in the plotting settings 
+preserves each step of the detection process and generates a video of the dimming progression. Following dimming detection, the program 
+calculates the dimming area derivative (dA/dT), identifies the maximum and the end of the impulsive phase—defined as the point when 
+dimming falls to 15% of its maximum value—and saves this information in a .txt file in the root folder and in the ”variables” directory 
+for subsequent DIRECD analysis.
+
+.. figure:: images_docs/detection_1.png
+    :align: center
+    :scale: 30 %
+    
+
+   Fig 2. Working of Dimming Detection page
+
 
 
 DIRECD analysis page
