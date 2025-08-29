@@ -127,7 +127,7 @@ To start the process, users can navigate to the Comparison page and fill the eve
 - The pipeline will automatically overlay your DIRECD-derived cone model onto the coronagraph images.
 
 
-** If You Need Calibrated LASCO Files: **
+**If You Need Calibrated LASCO Files:**
 
 - If you do not have calibrated files, select "No" when prompted.
 
@@ -141,5 +141,5 @@ To start the process, users can navigate to the Comparison page and fill the eve
 
 
 Use the interactive controls to adjust the cone's projected height on the coronagraph images. This allows you to visualize how the 
-CME structure would appear at different points in the corona.  
+CME structure would appear at different points in the corona.   
 *Note: The cone's width and direction remain fixed during this adjustment.*
