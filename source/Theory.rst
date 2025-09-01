@@ -38,6 +38,7 @@ where :math:`\vec{v}_1` is the vector between Sun center and :math:`C` and :math
 
 
 .. figure:: images_docs/2d_model.png
+    :align: center
     :scale: 20%
 
     Fig 1. Schematic of the cone geometry in 2D. The red cone is aligned radially, while the blue cone is tilted by an angle β relative
