@@ -65,5 +65,5 @@ The parameter R\ :sub:`sun` corresponds to the solar radius in kilometers.
 
 .. figure:: images_docs/figure_projection.png
     :align: center
-    :scale: 20%
+    :scale: 30%
 
