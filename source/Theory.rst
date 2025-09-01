@@ -1,9 +1,3 @@
-Introduction
-====================
-
-DIRECD (Dimming Inferred Estimation of CME Direction) is a novel method
-to characterize the early CME propagation direction from the expansion of coronal dimmings. 
-
 For more details refer to our article: 
 
 Cone Construction
@@ -56,7 +50,7 @@ The orthogonal projections of the cone on the solar surface can be described by 
     
     X_{\text{ortho}} = \frac{R_{\text{sun}} \cdot X_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}},   
     Y_{\text{ortho}} = \frac{R_{\text{sun}} \cdot Y_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}},   
-    Z_{\text{ortho}} = \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}},  
+    Z_{\text{ortho}} = \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}  
 
 
 Here, X\ :sub:`ortho`,  Y\ :sub:`ortho`, and  Z\ :sub:`ortho` denote the Cartesian coordinates of the orthogonal 
