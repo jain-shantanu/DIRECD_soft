@@ -14,6 +14,29 @@ inclined at an angle β relative to the radial direction. The parameter α denot
 the source location, and O indicates the Sun’s center. The perpendicular height of point P from its orthogonal projection P\ :sub:`proj`
 on the surface is denoted as H, and H\ :sub:`slant` represents the slant height of the cones.
 
+The slant height of the cone H\ :sub:`slant` is: 
+
+.. math::
+   :label: cone_slant
+
+   H_{\text{slant}} = \sqrt{(P_{x} - C_{x})^2 + (P_{y} - C_{y})^2 + (P_{z} - C_{z})^2}
+
+where :math:`(C_{x}, C_{y}, C_{z})` and :math:`(P_{x}, P_{y}, P_{z})` are the :math:`(x, y, z)` coordinates of the flare source :math:`C`.
+
+The radius of the base of the cone :math:`r` is related to slant height :math:`H_{\text{slant}}` as:
+
+.. math::
+
+   H_{\text{slant}} = r \cdot \tan \alpha
+
+The inclination angle :math:`\beta` is given by:
+
+.. math::
+   :label: inclination_angle
+
+   \beta = \arccos\left( \frac{\vec{v}_1 \cdot \vec{v}_2}{\|\vec{v}_1\| \|\vec{v}_2\|} \right)
+
+where :math:`\vec{v}_1` is the vector between Sun center and :math:`C` and :math:`\vec{v}_2` is the vector between :math:`C` and :math:`P`.
 
 Orthogonal Projection
 ---------------------------
