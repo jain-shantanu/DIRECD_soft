@@ -54,9 +54,9 @@ The orthogonal projections of the cone on the solar surface can be described by 
 
 .. math::
     
-    X_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot X_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}, 
-    Y_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Y_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}, 
-    Z_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}
+    X_{\text{ortho}} = \frac{R_{\text{sun}} \cdot X_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}   
+    Y_{\text{ortho}} = \frac{R_{\text{sun}} \cdot Y_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}   
+    Z_{\text{ortho}} = \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}  
 
 
 Here, X\ :sub:`ortho`,  Y\ :sub:`ortho`, and  Z\ :sub:`ortho` denote the Cartesian coordinates of the orthogonal 
