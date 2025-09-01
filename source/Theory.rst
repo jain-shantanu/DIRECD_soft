@@ -53,17 +53,15 @@ Orthogonal Projection
 The orthogonal projections of the cone on the solar surface can be described by the following equation:
 
 .. math::
-
-
     
     X_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot X_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}, 
     Y_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Y_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}, 
     Z_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}
 
 
-    Here, X\ :sub:`ortho`,  Y\ :sub:`ortho`, and  Z\ :sub:`ortho` denote the Cartesian coordinates of the orthogonal 
-    projections, while  X\ :sub:`c`,  Y\ :sub:`c`, and  Z\ :sub:`c` represent the three-dimensional coordinates of the cone. 
-    The parameter R\ :sub:`sun` corresponds to the solar radius in kilometers.
+Here, X\ :sub:`ortho`,  Y\ :sub:`ortho`, and  Z\ :sub:`ortho` denote the Cartesian coordinates of the orthogonal 
+projections, while  X\ :sub:`c`,  Y\ :sub:`c`, and  Z\ :sub:`c` represent the three-dimensional coordinates of the cone. 
+The parameter R\ :sub:`sun` corresponds to the solar radius in kilometers.
 
 .. figure:: images_docs/figure_projection.png
     :align: center
