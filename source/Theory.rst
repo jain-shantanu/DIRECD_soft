@@ -49,6 +49,23 @@ where :math:`\vec{v}_1` is the vector between Sun center and :math:`C` and :math
 Orthogonal Projection
 ---------------------------
 
-Connecting CME and dimming
----------------------------
+
+The orthogonal projections of the cone on the solar surface can be described by the following equation:
+
+.. math::
+:label: ortho
+
+\begin{align}
+X_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot X_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}} \
+Y_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Y_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}} \
+Z_{\text{ortho}} &= \frac{R_{\text{sun}} \cdot Z_c}{\sqrt{X_c^2 + Y_c^2 + Z_c^2}}
+\end{align}
+
+Here, :math:X_{\text{ortho}}, :math:Y_{\text{ortho}}, and :math:Z_{\text{ortho}} denote the Cartesian coordinates of the orthogonal 
+projections, while :math:X_c, :math:Y_c, and :math:Z_c represent the three-dimensional coordinates of the cone. 
+The parameter :math:R_{\text{sun}} corresponds to the solar radius in kilometers.
+
+.. figure:: images_docs/figure_projection.png
+    :align: center
+    :scale: 20%
 
