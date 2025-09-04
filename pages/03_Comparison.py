@@ -13,6 +13,7 @@ import math
 import astropy.units as u
 from datetime import datetime, timedelta
 import shutil
+from pathlib import Path
 
 
 
@@ -190,7 +191,7 @@ if submit:
 
 if st.session_state.submitted:
     changes = detect_parameter_changes(wavelength, cadence,calibrated_data, cone_height)
-    current_dir = os.getcwd()
+    current_dir = Path(__file__).parent.absolute().parent
     event_dt = mp.create_event_datetime(date_event, time_event)
     safe_event = event_dt.strftime("%Y-%m-%dT%H:%M:%S").replace(":", "-")
     main_event_folder = os.path.join(current_dir, 'Events', safe_event)

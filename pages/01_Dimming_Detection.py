@@ -23,7 +23,8 @@ from astropy.io import fits
 
 
 import gc
-current_dir = os.getcwd()
+from pathlib import Path
+current_dir = Path(__file__).parent.absolute().parent
 logo_folder = os.path.join(current_dir, 'logo', 'DIRECD_logo.jpg')
 
 def main_text():
@@ -366,7 +367,6 @@ timestamp_start = event_dt - timedelta(minutes=30)
 timestamp_sample_start = timestamp_start + timedelta(seconds=(cadence-1))
 
 safe_event = event_dt.strftime("%Y-%m-%dT%H:%M:%S").replace(":", "-")
-current_dir = os.getcwd()
 
 
 

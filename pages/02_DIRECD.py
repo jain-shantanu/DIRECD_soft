@@ -29,6 +29,7 @@ from astropy.coordinates.representation import CartesianRepresentation
 from matplotlib.offsetbox import (AnnotationBbox, DrawingArea, OffsetImage,
                                   TextArea)
 import matplotlib.image as image
+from pathlib import Path
 
 
 st.set_page_config(page_title="Application of DIRECD")
@@ -198,7 +199,8 @@ plot_ensemble_cones = form.checkbox('Plot ensemble of cones',label_visibility="v
 
 submit = form.form_submit_button("Submit")
 
-current_dir = os.getcwd()
+
+current_dir = Path(__file__).parent.absolute().parent
 
 processing_map = False
 edge_selection=False
@@ -282,7 +284,6 @@ if st.session_state.submitted:
         st.session_state.ensemble_cones = False
     
 
-    current_dir = os.getcwd()
     event_dt = mp.create_event_datetime(date_event, time_event)
     safe_event = event_dt.strftime("%Y-%m-%dT%H:%M:%S").replace(":", "-")
     if save_all_plots_checkbox:
