@@ -1,0 +1,2 @@
+[console_scripts]
+direcd = DIRECD.direcd_cli:main

@@ -10,7 +10,10 @@ from skimage.measure import label, regionprops, regionprops_table
 import skimage.morphology
 import astropy.units as u
 from sympy import Plane, Point, Point3D
-
+from sunpy.coordinates import get_horizons_coord
+from astropy.coordinates.representation import CartesianRepresentation
+from astropy.coordinates import SkyCoord
+from sunpy.coordinates import frames
 
 
 def create_sphere(cx,cy,cz, r, resolution=20):
@@ -307,5 +310,38 @@ def km_to_pixel_coords(km_coords, rad, Rsun, cenX, cenY, map_shape):
     px_yz[1] *= -1  # Flip y-axis
     coord = np.round(px_yz + np.array([cenX, cenY])).astype('int')
     coord[1] = map_shape[1] - coord[1]  # Adjust y-coordinate to image coordinates
+    return coord
+
+def convert_3d_km_to_sc(x_km, y_km, z_km, obstime, sc_observer='STEREO_A'):
+    """
+    Convert 3D Cartesian coordinates in km to STEREO viewpoint
+    
+    Parameters:
+    - x_km, y_km, z_km: 3D coordinates in kilometers
+    - obstime: Observation time
+    - stereo_observer: 'STEREO_A' or 'STEREO_B'
+    """
+    
+    # Convert km to appropriate units (solar radii or AU)
+    x = x_km * u.m
+    y = y_km * u.m
+    z = z_km * u.m
+    
+    # Create representation
+    representation = CartesianRepresentation(x=x, y=y, z=z)
+    
+    # Create coordinate in Heliographic Stonyhurst frame
+    hgs_frame = frames.HeliographicStonyhurst(obstime=obstime)
+    coord_3d = SkyCoord(representation, frame=hgs_frame)
+    
+    # Transform to STEREO viewpoint
+    if sc_observer == 'STEREO-A':
+        pos_sc = get_horizons_coord('STEREO-A', obstime)
+    elif sc_observer == 'SOHO' :
+        pos_sc = get_horizons_coord('SOHO', obstime)
+    sc_frame = frames.Helioprojective(obstime=obstime, observer=pos_sc)
+    
+    coord = coord_3d.transform_to(sc_frame)
+    
     return coord
 

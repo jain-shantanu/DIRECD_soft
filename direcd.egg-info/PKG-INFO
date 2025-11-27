@@ -1,0 +1,33 @@
+Metadata-Version: 2.4
+Name: direcd
+Version: 1.0.0
+Summary: DIRECD python package
+Author-email: Shantanu Jain <s.jain@rcdei.com>
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: aiapy==0.8.0
+Requires-Dist: mplcursors>=0.5
+Requires-Dist: sphinx-rtd-theme
+Requires-Dist: astropy>=5.0
+Requires-Dist: click>=8.0
+Requires-Dist: astroquery==0.4.7
+Requires-Dist: matplotlib==3.10.1
+Requires-Dist: matplotlib-inline==0.1.7
+Requires-Dist: moviepy==1.0.3
+Requires-Dist: numpy==1.26.0
+Requires-Dist: pandas==2.2.2
+Requires-Dist: pillow==10.4.0
+Requires-Dist: plotly==6.0.1
+Requires-Dist: scikit-image==0.24.0
+Requires-Dist: scikit-learn==1.6.1
+Requires-Dist: scipy==1.14.1
+Requires-Dist: seaborn==0.13.2
+Requires-Dist: statsmodels==0.14.4
+Requires-Dist: streamlit==1.43.1
+Requires-Dist: sunpy==5.0.0
+Requires-Dist: sympy==1.13.2
+Requires-Dist: kaleido==0.1.0.post1
+Requires-Dist: hvpy==1.1.0
+Requires-Dist: glymur==0.13.6

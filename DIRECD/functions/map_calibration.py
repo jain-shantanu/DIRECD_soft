@@ -146,8 +146,11 @@ def download_data(wavelength, sample, start_time, end_time, save_path,data_type=
 
 
 def calibrate_map(sunpy_map):
-    map_updated_pointing= update_pointing(sunpy_map)
-    registered = register(map_updated_pointing)
+    if sunpy_map.meta['lvl_num']==1:
+        map_updated_pointing= update_pointing(sunpy_map)
+        registered = register(map_updated_pointing)
+    else:
+        registered = sunpy_map
     map_2= registered/registered.exposure_time
     new_dimensions = [1024,1024] * u.pixel
     map_2 = map_2.resample(new_dimensions)

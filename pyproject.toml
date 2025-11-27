@@ -1,0 +1,53 @@
+[build-system]
+requires = [
+    "setuptools>=45",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "direcd"
+version = "1.0.0"
+authors = [
+  { name="Shantanu Jain", email="s.jain@rcdei.com" },
+]
+
+dependencies = [
+    "aiapy==0.8.0",
+    "mplcursors>=0.5",
+    "sphinx-rtd-theme",
+    "astropy>=5.0",
+    "click>=8.0",
+    "astroquery==0.4.7",
+    "matplotlib==3.10.1",
+    "matplotlib-inline==0.1.7",
+    "moviepy==1.0.3",
+    "numpy==1.26.0",
+    "pandas==2.2.2",
+    "pillow==10.4.0",
+    "plotly==6.0.1",
+    "scikit-image==0.24.0",
+    "scikit-learn==1.6.1",
+    "scipy==1.14.1",
+    "seaborn==0.13.2",
+    "statsmodels==0.14.4",
+    "streamlit==1.43.1",
+    "sunpy==5.0.0",
+    "sympy==1.13.2",
+    "kaleido==0.1.0.post1",
+    "hvpy==1.1.0",
+    "glymur==0.13.6"
+]
+description = "DIRECD python package"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+direcd = "DIRECD.direcd_cli:main"
+
+[tool.setuptools]
+packages = ["DIRECD"]
