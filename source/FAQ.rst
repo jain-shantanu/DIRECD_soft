@@ -49,10 +49,9 @@ Dimming Detection
 
         * Date: Start date of the event to be analyzed
 
-        * Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open 
-        sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
+        * Time: Start time of the event to be analyzed. The start time is the flare start time and can be obtained from open sources such as GOES/XRT flare catalog. The base time is automatically chosen as 30 minutes before start time.
 
-        * Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 180 mins.
+        * Time range of Detection: Minimum range for a good detection is 120 minutes from event start, default is 150 mins.
 
         * Wavelength/Cadence: Wavelength and Cadence of SDO/AIA data (default is 211 A and 1 minute)
 
@@ -67,7 +66,7 @@ Dimming Detection
 
         * File Path: Ensure you have placed the data files in the correct 'fits' subfolder for your event.
 
-        Events/
+        User Directory/Events/
             └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
                 └── fits/
                     └── wavelength/
@@ -88,8 +87,6 @@ Dimming Detection
         1. Enable the "Overwrite Raw fits" option to force redownload
 
         2. Check that all files have consistent metadata
-
-        3. Verify the files are complete SDO/AIA Level 1 data
 
         In case of a specific error, please reach out to us.
 
@@ -130,38 +127,34 @@ DIRECD Analysis
 
 **Technical Notes**
 
-* The application requires SunPy, Astropy, and other astronomical Python packages
+* The application requires Numpy, Scipy, Sci-kit image, Matplotlib, Plotly, SunPy, Astropy and other astronomical Python packages
 * Processing times vary from 5-30 minutes depending on parameters and system capabilities
-* Results are saved in the Events directory with timestamps for reproducibility
+* Results are saved in the Events directory with timestamps
 
 
 Comparing with Coronagraphs
 ------------
 
-**Q: What LASCO data format is required?**
-    A: The tool requires calibrated LASCO C2 or C3 FITS files with standard SolarSoft header information.
+**Q: What is the data format required for coronagraph images?**
+    A: The tool requires calibrated LASCO C2/ STEREO-A COR2 FITS files with standard SolarSoft header information.
 
 **Q: I don't have calibrated data, where can I get it?**
-    A: At this moment, it's not possible to calibrate LASCO data using astropy/sunpy libraries in python.
+    A: At this moment, it's not possible to calibrate LASCO/STEREO data using astropy/sunpy libraries in python.
     However, we provide IDL/Solarsoft routines with the package where the users can calibrate the LASCO C2 data for DIRECD analysis.
-    When the user chooses "I don't have calibrated data", the pro file is saved in:
-
-    Events/
-        └── YYYY-MM-DDTHH-MM-SS/  (event timestamp)
-                └── lasco.pro
+    
 **Q: What does the cone height slider control?**
     A: The cone height slider adjusts the height (in solar radii) of the best-fit cone
     keeping width and inclination angle same, allowing you to see how the CME would appear at different heights in the corona.
 
-**Q: Projected cone position doesn't match LASCO CME position**
-    A: This may happen due to improper calibration of LASCO fits files and/or deflection between different heights (since DIRECD calculates CME direction at low heights while coronagraphs show CME at higher heights).
+**Q: Projected cone position doesn't match LASCO/STEREO CME position**
+    A: This may happen due to improper calibration of fits files and/or deflection between different heights (since DIRECD calculates CME direction at low heights while coronagraphs show CME at higher heights).
     Other reasons could be bad dimming detection due to presence of other solar features nearby. Such events may not work with automated DIRECD tool and may require
     careful analysis.
 
 **Q: How do I interpret the matching/ non-matching of DIRECD cone with coronagraph?**
     A: Below is a general interpretation guideline, although each event is case-specific and may require more analysis:
     
-    * Good agreement: When the projected cone aligns with the actual CME structure in LASCO imagery.
+    * Good agreement: When the projected cone aligns with the actual CME structure in coronagraphs.
     * Partial agreement: If only parts of the cone match, consider whether:
 
         - The CME has undergone rotation or deflection

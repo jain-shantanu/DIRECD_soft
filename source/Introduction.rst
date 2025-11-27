@@ -4,8 +4,6 @@ Introduction
 DIRECD (Dimming Inferred Estimation of CME Direction) is a novel method
 to characterize the early CME propagation direction from the expansion of coronal dimmings. 
 
-For more details refer to our article: 
-
 Graphical User Interface
 ------------
 
@@ -37,7 +35,7 @@ usability, enabling you to refine your analysis with ease.
 
 To begin, the user initiates the process by selecting a pre-defined event from the “Event” dropdown menu or by defining a custom event. 
 The software currently supports EUV images from SDO/AIA. Key parameters include the event’s date and approximate time, the 
-detection time range (which defaults to 180 minutes), the wavelength (193 or 211 Å), and the image cadence (12 to 60 seconds). 
+detection time range (which defaults to 180 minutes), the wavelength (211 Å), and the image cadence (60 to 240 seconds). 
 The flare source location is specified in heliographic latitude and longitude and must be within ±60° to be compatible with the 
 DIRECD method. Finally, the user selects the threshold for dimming detection from three predefined options (-0.11, -0.15, -0.19) to execute the detection. 
 Additional options allow for the automatic saving of plots and overwriting previous results. 
@@ -118,20 +116,24 @@ DIRECD-soft allows you to validate your analysis by comparing the predicted CME 
 The tool currently supports comparison with SOHO/LASCO coronagraph data.  
 To start the process, users can navigate to the Comparison page and fill the event date/time. 
 
-**If You Have Calibrated LASCO Files:**  
+**If You Have Calibrated Files:**  
 
-- When prompted, select "Yes" to indicate you have pre-calibrated LASCO FITS files.
+- When prompted, select "Yes" to indicate you have pre-calibrated FITS files.
 
 - Upload your files using the provided interface.
 
 - The pipeline will automatically overlay your DIRECD-derived cone model onto the coronagraph images.
 
 
-**If You Need Calibrated LASCO Files:**
+**If You don't have Calibrated Files:**
 
 - If you do not have calibrated files, select "No" when prompted.
 
-- The software provides a calibration routine. Navigate to the /Events/ directory on your system.
+- The software will download coronagraph images from Helioviewer for the user selected time
+
+- The pipeline will automatically overlay your DIRECD-derived cone model onto the coronagraph images.
+
+**We also provided LASCO calibration routines in IDL - **
 
 - Locate and run the provided IDL/SolarSoft calibration script.
 
@@ -142,4 +144,5 @@ To start the process, users can navigate to the Comparison page and fill the eve
 
 Use the interactive controls to adjust the cone's projected height on the coronagraph images. This allows you to visualize how the 
 CME structure would appear at different points in the corona.   
+
 *Note: The cone's width and direction remain fixed during this adjustment.*
