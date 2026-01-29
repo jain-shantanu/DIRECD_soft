@@ -229,7 +229,7 @@ if st.session_state.folder_path is not False:
 
     
 
-    if st.session_state.list_events is not 'New Event':
+    if st.session_state.list_events != 'New Event':
         default_date = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').date()
         default_time = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').time()
         matching_rows = data_event[
