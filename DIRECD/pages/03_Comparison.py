@@ -150,7 +150,7 @@ if st.session_state.folder_path is not False:
     selected_folder_path = st.session_state.folder_path
 
     try:
-        data_event = pd.read_csv(st.session_state.folder_path + 'list_events.csv')
+        data_event = pd.read_csv(os.path.join(st.session_state.folder_path, 'list_events.csv'))
         string_options = (data_event['Event'] + 'T' + data_event['Time']).str.replace('-', '/').tolist()
         string_option_1 = 'New Event'
         string_options.insert(0, string_option_1)
@@ -161,7 +161,7 @@ if st.session_state.folder_path is not False:
         placeholder="list_events")
     st.session_state.list_events = list_events
 
-    if st.session_state.list_events is not 'New Event':
+    if st.session_state.list_events != 'New Event':
         default_date = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').date()
         default_time = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').time()
 

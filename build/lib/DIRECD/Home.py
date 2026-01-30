@@ -38,7 +38,7 @@ st.markdown("""
 **Details**:
 - **Introducing DIRECD**: (https://doi.org/10.1051/0004-6361/202347927)
 - **Application of DIRECD**: (https://doi.org/10.1051/0004-6361/202452324), (https://doi.org/10.1051/0004-6361/202451777)
-- **Statistical Application of DIRECD**: (work in progress)
+- **Statistical Application of DIRECD**: (https://doi.org/10.3847/1538-4365/ae0a27)
 """)
     
 st.markdown('---')

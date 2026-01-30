@@ -125,7 +125,7 @@ if st.session_state.folder_path is not False:
 
    
 
-    if st.session_state.list_events is not 'New Event':
+    if st.session_state.list_events != 'New Event':
         default_date = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').date()
         default_time = datetime.strptime(st.session_state.list_events, '%d/%m/%YT%H:%M').time()
         matching_rows = data_event[
@@ -866,16 +866,14 @@ if st.session_state.folder_path is not False:
             areas = [direcd.sectors_to_pix_and_data(sector, smap_mask, area_map=amap)[0] 
                     for sector in sectors]
 
-
+            direcd.reset_pixel_tracking()
             area1, area2, area3, area4, area5, area6, \
             area7, area8, area9, area10, area11, area12 = areas
 
             frames_sector = []
 
             for i in range(1, 13):
-                sector = pd.DataFrame({"lat": globals()[f"sector{i}n"].lat,
-                                    "lon": globals()[f"sector{i}n"].lon,
-                                    "sector": i,
+                sector = pd.DataFrame({"sector": i,
                                     "sec_deg": (i - 1) * 30,
                                     "area": globals()[f"area{i}"]
                                     })

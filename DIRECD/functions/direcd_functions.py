@@ -212,21 +212,54 @@ def choosing_sectors(h) :
     
     return sector1,sector2,sector3,sector4,sector5,sector6,sector7,sector8,sector9,sector10,sector11,sector12
 
-def sectors_to_pix_and_data(sector_n,smap,area_map=False,intensity_map=False):
-    #dim_mask = np.argwhere(sector_n == sector_n)
-    pixels = np.asarray(np.rint(smap.world_to_pixel(sector_n)), dtype=int)
+
+already_used_pixels = set()
+
+def sectors_to_pix_and_data(sector_n, smap, area_map=False, intensity_map=False, skip_repeats=True):
+    # Get pixel coordinates
+    pixels = np.asarray((smap.world_to_pixel(sector_n)), dtype=int)
     x = pixels[0, :]
     y = pixels[1, :]
-    dim = smap.data[y,x]
-    if area_map !=False:
-        area = area_map.data[y,x]
+    
+    # Track which pixels are new (not seen before)
+    new_pixel_indices = []
+    new_x = []
+    new_y = []
+    
+    for i, (xi, yi) in enumerate(zip(x, y)):
+        pixel_key = (xi, yi)  # Use tuple as key
+        
+        if not skip_repeats or pixel_key not in already_used_pixels:
+            new_pixel_indices.append(i)
+            new_x.append(xi)
+            new_y.append(yi)
+            already_used_pixels.add(pixel_key)
+    
+    # Convert to numpy arrays
+    new_x = np.array(new_x)
+    new_y = np.array(new_y)
+    
+    # Get data only for new pixels
+    dim = smap.data[new_y, new_x]
+    
+    if area_map:
+        area = area_map.data[new_y, new_x]
     else:
         area = 0
-    if intensity_map !=False:
-        intensity = intensity_map.data[y,x]
-    else: 
-        intensity =0
-    return area,intensity,dim,x,
+    
+    if intensity_map:
+        intensity = intensity_map.data[new_y, new_x]
+    else:
+        intensity = 0
+    
+    new_pixels = np.vstack((new_x, new_y))
+    return area, intensity, dim, new_x, new_y
+
+# When you want to reset (start fresh with new sectors):
+def reset_pixel_tracking():
+    global already_used_pixels
+    already_used_pixels = set()
+
 
 def get_plane(txtt,points): 
     p0, p1, p2 = points

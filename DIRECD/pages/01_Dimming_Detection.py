@@ -215,7 +215,8 @@ if st.session_state.folder_path is not False:
     default_threshold = -0.15
     default_time_range=150
     try:
-        data_event = pd.read_csv(st.session_state.folder_path + 'list_events.csv')
+        data_event = pd.read_csv(os.path.join(st.session_state.folder_path, 'list_events.csv'))
+        st.write(os.path.join(st.session_state.folder_path, 'list_events.csv'))
         string_options = (data_event['Event'] + 'T' + data_event['Time']).str.replace('-', '/').tolist()
         string_option_1 = 'New Event'
         string_options.insert(0, string_option_1)
