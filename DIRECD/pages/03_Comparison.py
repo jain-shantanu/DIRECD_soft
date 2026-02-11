@@ -639,7 +639,7 @@ if st.session_state.folder_path is not False:
                         rotated_data = rotate(cor2_map.data, angle=cor2_map.meta.get('crota1', 0), reshape=False)
                     else: 
                         rotated_data = rotate(cor2_map.data, angle=180 - cor2_map.meta.get('crota1', 0), reshape=False)
-                    st.write(cor2_map.meta.get('crota1', 0))
+                    
 
 # Create new metadata with updated rotation
                     new_meta = cor2_map.meta.copy()
@@ -650,7 +650,7 @@ if st.session_state.folder_path is not False:
 # Create new map with rotated data
                     rotated_map = sunpy.map.Map(rotated_data, new_meta)
                     cor2_map = rotated_map
-                    st.write(cor2_map.meta.get('crota1', 0))
+                    
                 with st.spinner('Please wait...',show_time=True):
                     fig = plt.figure(figsize=(12, 6), constrained_layout=True)
                     ax = fig.add_subplot(projection=st.session_state.cor2_map)

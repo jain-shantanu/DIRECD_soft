@@ -1147,7 +1147,23 @@ if st.session_state.folder_path is not False:
                     deg=[]
                     iter_two=2
                     #overlay_2 = ax.get_coords_overlay(new_frame)
-                    for i in range(temp_deg_1-iter_one,temp_deg_1+iter_one+1,iter_two):
+                    if (temp_deg_1 == start_deg-15):
+                        temp_deg_2 = temp_deg_1
+                        temp_deg_2_2 = temp_deg_1+iter_one+1
+
+                    elif temp_deg_1 == start_deg+15:
+                        temp_deg_2 = temp_deg_1-iter_one
+                        temp_deg_2_2 = temp_deg_1
+                    else:
+                        temp_deg_2 = temp_deg_1-iter_one
+                        temp_deg_2_2 = temp_deg_1+iter_one+1
+
+
+
+                    st.write(temp_deg_2)
+                    st.write(temp_deg_2_2)
+                    st.write('105-135')
+                    for i in range(temp_deg_2,temp_deg_2_2,iter_two):
                         
                         overlay_2[0].set_ticks(np.arange(start = i,stop = i+1,step = 30) * u.deg)
                         overlay_2[0].grid(ls='--', color='red',linewidth=2)
@@ -1178,7 +1194,7 @@ if st.session_state.folder_path is not False:
                         dist_source_edge_1_all.extend([dist_source_edge])
                     temp_deg = deg[np.argmax(dist_source_edge_1_all)]    
                     dimming_edge_world = dimming_edge_world_HSH_all[np.argmax(dist_source_edge_1_all)]
-                    dominant_dir  = np.arange(temp_deg_1-iter_one,temp_deg_1+iter_one+1,iter_two)[np.argmax(dist_source_edge_1_all)]
+                    dominant_dir  = np.arange(temp_deg_2,temp_deg_2_2,iter_two)[np.argmax(dist_source_edge_1_all)]
                     dimming_edge_world_2 = ccc
                     dimming_edge_pix_2 = smap_mask.world_to_pixel(ccc)
 

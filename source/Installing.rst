@@ -23,7 +23,7 @@ you can run ``DIRECD`` creating a virtual environment first with `Conda <https:/
 
 **Creating, Activating, and Deactivating a Conda Environment:**
 
-To create a new Conda environment called "PyThea", and then activate it follow these steps:
+To create a new Conda environment called "DIRECD", and then activate it follow these steps:
 
 1. Open a terminal or command prompt.
 
