@@ -382,6 +382,7 @@ if st.session_state.folder_path is not False:
         
         with st.spinner(f"Processing End of Impulsive Phase Map",show_time=True):
             
+            
             main_event_folder = os.path.join(selected_folder_path, 'Events', safe_event)
             save_path_timing = os.path.join(selected_folder_path, 'Events', safe_event, 'Timing_Map',str(wavelength),str(cadence))
 
@@ -1160,9 +1161,6 @@ if st.session_state.folder_path is not False:
 
 
 
-                    st.write(temp_deg_2)
-                    st.write(temp_deg_2_2)
-                    st.write('105-135')
                     for i in range(temp_deg_2,temp_deg_2_2,iter_two):
                         
                         overlay_2[0].set_ticks(np.arange(start = i,stop = i+1,step = 30) * u.deg)
