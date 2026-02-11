@@ -67,6 +67,8 @@ Run DIRECD
   # Install the required packages using pip
   pip install DIRECD
 
+  direcd streamlit
+
 .. warning::
 
   Currently install with ``conda install DIRECD`` is not suppoted.
