@@ -57,17 +57,26 @@ st.header("DIRECD: Dimming Inferred Estimation of CME Direction")
 st.markdown('---')
 
 def select_folder():
-   root = tk.Tk()
-   root.withdraw()
-   folder_path = filedialog.askdirectory(master=root)
-   root.destroy()
-   return folder_path
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    root.update() 
+    folder_path = filedialog.askdirectory(master=root,title="Select a folder for saving results")
+    root.quit()
+    root.destroy()
+    return folder_path
 
 selected_folder_path = st.session_state.get("folder_path", None)
 folder_select_button = st.button("Please select a folder for saving results of analysis")
 if folder_select_button:
-  selected_folder_path = select_folder()
-  st.session_state.folder_path = selected_folder_path
+    try:
+        selected_folder_path = select_folder()
+        st.session_state.folder_path = selected_folder_path
+    except:
+        selected_folder_path = st.text_input('Root Folder Path: ')
+        st.session_state.folder_path = selected_folder_path
+
+
 
 
 if selected_folder_path:

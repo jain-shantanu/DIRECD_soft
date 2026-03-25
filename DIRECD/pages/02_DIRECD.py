@@ -4,7 +4,6 @@ from functions import direcd_functions as direcd
 import os
 from matplotlib.colors import Normalize
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
 import matplotlib.path
 import numpy as np
 import sunpy.map
@@ -27,13 +26,14 @@ import plotly.graph_objects as go
 import matplotlib.gridspec as gridspec
 from astropy.coordinates.representation import CartesianRepresentation
 from matplotlib.offsetbox import (AnnotationBbox, DrawingArea, OffsetImage,
-                                  TextArea)
+import sys
+import platform
 from plotly.subplots import make_subplots
 import matplotlib.image as image
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog
-#import kaleido
+import matplotlib.dates as mdates
 
 current_dir = Path(__file__).parent.absolute().parent
 logo_folder_short = os.path.join(current_dir, 'logo', 'direcd_short.png')
@@ -85,10 +85,36 @@ default_index_lon = 0
 
 if st.session_state.folder_path is False:
     def select_folder():
-        root = tk.Tk()
-        root.withdraw()
-        folder_path = filedialog.askdirectory(master=root)
-        root.destroy()
+        if sys.platform == 'darwin':  # macOS
+            # Option 1: Fixed AppleScript using Finder
+            script = '''
+                tell application "Finder"
+                    activate
+                    set selected_folder to choose folder with prompt "Select a folder for saving results"
+                    return POSIX path of selected_folder
+                end tell
+                '''
+
+            try:
+                result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True,
+                text=True,
+                check=True
+                )
+                folder_path = result.stdout.strip()
+                return folder_path if folder_path else None
+            except subprocess.CalledProcessError as e:
+                print(f"Error selecting folder: {e.stderr}")
+                return None
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes('-topmost', True)
+            root.update()
+            folder_path = filedialog.askdirectory(master=root, title="Select a folder for saving results")
+            root.quit()
+            root.destroy()
         return folder_path
 
     selected_folder_path = st.session_state.get("folder_path", None)
@@ -606,6 +632,8 @@ if st.session_state.folder_path is not False:
                     df1_plot['area_der'] = df1_plot['area_der']/10**10
 
                     # Create template
+
+                    
                     
                     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
                     
@@ -735,11 +763,102 @@ if st.session_state.folder_path is not False:
 
                     #st.set_page_config(layout="wide")    
                     st.plotly_chart(fig, use_container_width=True)
-                    if save_all_plots_checkbox:
-                        fig.write_image(file = os.path.join(save_path_plots, 'area_derivative'+'.png'),format='png')
+                    # if save_all_plots_checkbox:
+                    #     fig.write_image(file = os.path.join(save_path_plots, 'area_derivative'+'.png'),format='png')
 
                     
+                    
+
+
+                    
+                    if save_all_plots_checkbox:
+# Create figure with subplots
+                        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+                        fig.subplots_adjust(hspace=0.05)
+
+                        # Add traces
+                        ax1.plot(df1_plot['times'], df1_plot['area'], 
+                                color='blue', linewidth=1.5, label='Area')
+
+                        ax2.plot(df1_plot['times'], df1_plot['area_der'], 
+                                color='red', linewidth=1.5, label='Area Derivative')
+
+                        # Set titles and labels with Arial font
+                        ax1.set_ylabel('Dimming Area [10¹⁰ km²]', fontname='Arial', fontsize=16)
+                        ax2.set_ylabel('Derivative [10¹⁰ km²]', fontname='Arial', fontsize=16)
+
+                        # Format x-axis time
+                        for ax in [ax1, ax2]:
+                            ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+                            ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+                            plt.setp(ax.xaxis.get_majorticklabels(), rotation=0, fontsize=12, fontname='Arial')
+                            ax.tick_params(axis='y', labelsize=14, width=2, direction='in')
+                            ax.tick_params(axis='x', labelsize=12, width=2, direction='in')
+                            
+                            # Set spines
+                            for spine in ax.spines.values():
+                                spine.set_linewidth(2)
+                                spine.set_color('grey')
+                            
+                            # Remove top and right spines
+                            ax.spines['top'].set_visible(False)
+                            ax.spines['right'].set_visible(False)
+                            
+                            # Set tick parameters
+                            ax.tick_params(axis='both', which='both', width=2, colors='black')
+                            
+                            # Remove grid
+                            ax.grid(True,alpha=0.2)
+
+                        # Add reference lines and annotations to second subplot
+                        max_der = df1_plot['area_der'].max()
+                        threshold = 0.15 * max_der
+
+                        # Horizontal line
+                        ax2.axhline(y=threshold, color='magenta', linestyle='--', linewidth=1.5)
+
+                        # Vertical line at specific time
+                        x_vline = df1_plot['times'][q['Num'].to_numpy()[0]]
+                        ax2.axvline(x=x_vline, color='magenta', linestyle='--', linewidth=1.5)
+
+                        # Annotation for 15% of max
+                        ax2.annotate('15% of max', 
+                                    xy=(x_vline - timedelta(minutes=10), threshold),
+                                    xytext=(x_vline - timedelta(minutes=10), threshold),
+                                    fontsize=14, color='magenta', fontname='Arial',
+                                    ha='center', va='bottom')
+
+                        # Annotation with arrow for end time
+                        ax2.annotate(end_time_dt.strftime('%H:%M:%S'),
+                                    xy=(x_vline, threshold),
+                                    xytext=(x_vline + timedelta(minutes=5), threshold * 1.5),
+                                    fontsize=14, color='magenta', fontname='Arial',
+                                    arrowprops=dict(arrowstyle='->', color='magenta', lw=2),
+                                    ha='left', va='center')
+
+                        # Set x-axis label only on bottom plot
+                        ax2.set_xlabel('', fontname='Arial', fontsize=14)
+
+                        # Remove legends
+                        ax1.legend().set_visible(False)
+                        ax2.legend().set_visible(False)
+
+                        # Adjust layout
+                        plt.tight_layout()
+
+                        ax2.grid('on')
+
+                    
+                        plt.savefig(os.path.join(save_path_plots, 'area_derivative.png'), 
+                                    format='png', dpi=300, bbox_inches='tight')
+
+                        plt.close()
                     st.success(f'Plot generated')
+
+# Save if checkbox is checked
+# Display in Streamlit
+
+
                     
 
 
