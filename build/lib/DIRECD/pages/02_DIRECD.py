@@ -17,16 +17,14 @@ from datetime import datetime, timedelta
 from scipy import ndimage, misc
 from skimage.morphology import rectangle
 from itertools import cycle, islice, dropwhile
-import mplcursors
-import streamlit.components.v1 as components
 import skimage.measure
 import math
 from io import StringIO
 import plotly.graph_objects as go
 import matplotlib.gridspec as gridspec
 from astropy.coordinates.representation import CartesianRepresentation
-from matplotlib.offsetbox import (AnnotationBbox, DrawingArea, OffsetImage,
-                                  TextArea)
+from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+import sys
 from plotly.subplots import make_subplots
 import matplotlib.image as image
 from pathlib import Path
@@ -84,10 +82,36 @@ default_index_lon = 0
 
 if st.session_state.folder_path is False:
     def select_folder():
-        root = tk.Tk()
-        root.withdraw()
-        folder_path = filedialog.askdirectory(master=root)
-        root.destroy()
+        if sys.platform == 'darwin':  # macOS
+            # Option 1: Fixed AppleScript using Finder
+            script = '''
+                tell application "Finder"
+                    activate
+                    set selected_folder to choose folder with prompt "Select a folder for saving results"
+                    return POSIX path of selected_folder
+                end tell
+                '''
+
+            try:
+                result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True,
+                text=True,
+                check=True
+                )
+                folder_path = result.stdout.strip()
+                return folder_path if folder_path else None
+            except subprocess.CalledProcessError as e:
+                print(f"Error selecting folder: {e.stderr}")
+                return None
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes('-topmost', True)
+            root.update()
+            folder_path = filedialog.askdirectory(master=root, title="Select a folder for saving results")
+            root.quit()
+            root.destroy()
         return folder_path
 
     selected_folder_path = st.session_state.get("folder_path", None)
@@ -781,7 +805,7 @@ if st.session_state.folder_path is not False:
                             ax.tick_params(axis='both', which='both', width=2, colors='black')
                             
                             # Remove grid
-                            ax.grid('off')
+                            ax.grid(True,alpha=0.2)
 
                         # Add reference lines and annotations to second subplot
                         max_der = df1_plot['area_der'].max()
@@ -819,7 +843,7 @@ if st.session_state.folder_path is not False:
                         # Adjust layout
                         plt.tight_layout()
 
-                        ax2.grid('off')
+                        ax2.grid('on')
 
                     
                         plt.savefig(os.path.join(save_path_plots, 'area_derivative.png'), 
@@ -1006,6 +1030,7 @@ if st.session_state.folder_path is not False:
             # plt.close(fig_2)
             st.pyplot(fig_2)
             plt.close(fig_2)
+            
 
             if save_all_plots_checkbox:
                 fig_2.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_areas'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)

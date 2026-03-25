@@ -3,7 +3,6 @@ import os
 import sunpy
 from functions import map_calibration as mp
 from functions import direcd_functions as direcd
-import tempfile
 import subprocess
 from astropy.io import fits
 import numpy as np
@@ -11,19 +10,17 @@ import matplotlib.pyplot as plt
 import pickle
 import math
 import astropy.units as u
-from datetime import datetime, timedelta
-import shutil
+from datetime import datetime
 from pathlib import Path
 import io
 import tkinter as tk
 from tkinter import filedialog
 import hvpy
 from sunpy.util.config import get_and_create_download_dir
-from sunpy.time import TimeRange, parse_time
+from sunpy.time import parse_time
 from scipy.ndimage import rotate
 import pandas as pd
 import sys
-import platform
 
 current_dir = Path(__file__).parent.absolute().parent
 logo_folder_short = os.path.join(current_dir, 'logo', 'direcd_short.png')

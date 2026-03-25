@@ -5,7 +5,7 @@ import os
 import sunpy.map
 from astropy.coordinates import SkyCoord
 import astropy.units as u
-from sunpy.coordinates import Helioprojective, frames
+from sunpy.coordinates import frames
 import numpy as np
 from scipy import ndimage
 from skimage.morphology import binary_closing
@@ -14,13 +14,6 @@ from moviepy.editor import *
 from pathlib import Path
 import pandas as pd
 import sys
-import platform
-import pickle
-from io import StringIO
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import shutil
 from astropy.io import fits
 import tkinter as tk
 from tkinter import filedialog

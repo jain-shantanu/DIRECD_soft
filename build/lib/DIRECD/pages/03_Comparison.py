@@ -3,7 +3,6 @@ import os
 import sunpy
 from functions import map_calibration as mp
 from functions import direcd_functions as direcd
-import tempfile
 import subprocess
 from astropy.io import fits
 import numpy as np
@@ -11,17 +10,17 @@ import matplotlib.pyplot as plt
 import pickle
 import math
 import astropy.units as u
-from datetime import datetime, timedelta
-import shutil
+from datetime import datetime
 from pathlib import Path
 import io
 import tkinter as tk
 from tkinter import filedialog
 import hvpy
 from sunpy.util.config import get_and_create_download_dir
-from sunpy.time import TimeRange, parse_time
+from sunpy.time import parse_time
 from scipy.ndimage import rotate
 import pandas as pd
+import sys
 
 current_dir = Path(__file__).parent.absolute().parent
 logo_folder_short = os.path.join(current_dir, 'logo', 'direcd_short.png')
@@ -74,10 +73,36 @@ if 'obstime' not in st.session_state:
 
 if st.session_state.folder_path is False:
     def select_folder():
-        root = tk.Tk()
-        root.withdraw()
-        folder_path = filedialog.askdirectory(master=root)
-        root.destroy()
+        if sys.platform == 'darwin':  # macOS
+            # Option 1: Fixed AppleScript using Finder
+            script = '''
+                tell application "Finder"
+                    activate
+                    set selected_folder to choose folder with prompt "Select a folder for saving results"
+                    return POSIX path of selected_folder
+                end tell
+                '''
+
+            try:
+                result = subprocess.run(
+                    ['osascript', '-e', script],
+                    capture_output=True,
+                    text=True,
+                    check=True
+                )
+                folder_path = result.stdout.strip()
+                return folder_path if folder_path else None
+            except subprocess.CalledProcessError as e:
+                print(f"Error selecting folder: {e.stderr}")
+                return None
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes('-topmost', True)
+            root.update()
+            folder_path = filedialog.askdirectory(master=root, title="Select a folder for saving results")
+            root.quit()
+            root.destroy()
         return folder_path
 
     selected_folder_path = st.session_state.get("folder_path", None)

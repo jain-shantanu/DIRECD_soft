@@ -17,17 +17,14 @@ from datetime import datetime, timedelta
 from scipy import ndimage, misc
 from skimage.morphology import rectangle
 from itertools import cycle, islice, dropwhile
-import mplcursors
-import streamlit.components.v1 as components
 import skimage.measure
 import math
 from io import StringIO
 import plotly.graph_objects as go
 import matplotlib.gridspec as gridspec
 from astropy.coordinates.representation import CartesianRepresentation
-from matplotlib.offsetbox import (AnnotationBbox, DrawingArea, OffsetImage,
+from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 import sys
-import platform
 from plotly.subplots import make_subplots
 import matplotlib.image as image
 from pathlib import Path
@@ -1033,6 +1030,7 @@ if st.session_state.folder_path is not False:
             # plt.close(fig_2)
             st.pyplot(fig_2)
             plt.close(fig_2)
+            
 
             if save_all_plots_checkbox:
                 fig_2.savefig(os.path.join(save_path_plots, 'end_of_implusive_phase_areas'+'.png'),facecolor='w',bbox_inches='tight',dpi=300)

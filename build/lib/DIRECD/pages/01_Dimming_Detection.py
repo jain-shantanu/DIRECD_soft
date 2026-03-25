@@ -5,7 +5,7 @@ import os
 import sunpy.map
 from astropy.coordinates import SkyCoord
 import astropy.units as u
-from sunpy.coordinates import Helioprojective, frames
+from sunpy.coordinates import frames
 import numpy as np
 from scipy import ndimage
 from skimage.morphology import binary_closing
@@ -13,15 +13,11 @@ import matplotlib.pyplot as plt
 from moviepy.editor import *
 from pathlib import Path
 import pandas as pd
-import pickle
-from io import StringIO
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import shutil
+import sys
 from astropy.io import fits
 import tkinter as tk
 from tkinter import filedialog
+import subprocess
 
 
 import gc
@@ -57,24 +53,45 @@ st.header("DIRECD: Dimming Inferred Estimation of CME Direction")
 st.markdown('---')
 
 def select_folder():
-    root = tk.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    root.update() 
-    folder_path = filedialog.askdirectory(master=root,title="Select a folder for saving results")
-    root.quit()
-    root.destroy()
+    if sys.platform == 'darwin':  # macOS
+        # Option 1: Fixed AppleScript using Finder
+        script = '''
+            tell application "Finder"
+                activate
+                set selected_folder to choose folder with prompt "Select a folder for saving results"
+                return POSIX path of selected_folder
+            end tell
+            '''
+
+        try:
+            result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            folder_path = result.stdout.strip()
+            return folder_path if folder_path else None
+        except subprocess.CalledProcessError as e:
+            print(f"Error selecting folder: {e.stderr}")
+            return None
+    else:
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes('-topmost', True)
+        root.update()
+        folder_path = filedialog.askdirectory(master=root,title="Select a folder for saving results")
+        root.quit()
+        root.destroy()
     return folder_path
 
 selected_folder_path = st.session_state.get("folder_path", None)
 folder_select_button = st.button("Please select a folder for saving results of analysis")
 if folder_select_button:
-    try:
-        selected_folder_path = select_folder()
-        st.session_state.folder_path = selected_folder_path
-    except:
-        selected_folder_path = st.text_input('Root Folder Path: ')
-        st.session_state.folder_path = selected_folder_path
+
+    selected_folder_path = select_folder()
+
+    st.session_state.folder_path = selected_folder_path
 
 
 
@@ -482,7 +499,8 @@ if st.session_state.folder_path is not False:
     if submit:
 
         save_path_fits = os.path.join(selected_folder_path, 'Events', safe_event, 'fits',str(wavelength),str(cadence))
-        os.makedirs(save_path_fits, exist_ok=True) 
+        os.makedirs(save_path_fits, exist_ok=True)
+        st.write(save_path_fits)
 
         if should_download:
             st.header('Download Data')
@@ -606,7 +624,8 @@ if st.session_state.folder_path is not False:
             st.write('Calibrate Base_map')
             with st.spinner("Calibrating Base Map...",show_time=True):
             
-                listdir = sorted(os.listdir(save_path_fits)) #show elements in the folder
+                listdir = sorted(os.listdir(save_path_fits))
+                st.write(os.listdir(save_path_fits))#show elements in the folder
                 number= len(listdir)
 
                 basemap_file=os.path.join(save_path_fits, listdir[0])
